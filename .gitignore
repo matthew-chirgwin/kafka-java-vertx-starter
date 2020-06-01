@@ -1,3 +1,10 @@
 target
 .idea
 *.iml
+.settings
+.vscode
+.classpath
+.project
+node/
+ui/dist
+ui/node_modules
