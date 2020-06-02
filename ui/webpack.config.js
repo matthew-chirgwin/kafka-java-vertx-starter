@@ -58,13 +58,11 @@ module.exports = {
 	output: {
     filename: '[name].bundle.js',
     path: BUILD_DIR + '/public/',
-    publicPath: './',
 	},
 	devServer: {
     contentBase: BUILD_DIR + '/public',
     compress: true,
     inline: true,
-    port: 8080,
     hot: true
   },
   plugins: pluginSet

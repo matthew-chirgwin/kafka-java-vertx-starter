@@ -1,8 +1,7 @@
-// jest.config.js
 module.exports = {
   moduleDirectories: [
     'node_modules',
-    'Utils',
+    'TestUtils',
     __dirname
   ],
   transform: {
