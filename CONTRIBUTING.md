@@ -13,12 +13,10 @@ to look for and tackle low-hanging fruit in the [issue tracker](https://github.c
 
 ## Commit message linting
 
-Before creating a pull request, please ensure that you have our git commit-msg linter set up to save you from getting caught out by our checks on your pull request. To install this, simply run `git config core.hooksPath ./config/githooks`.
-
 The format of your commit message should be as follows:
 
 ```
-(feat|fix|docs|style|refactor|perf|test|chore): <commit title>
+(feat|fix|docs|style|refactor|perf|test|chore): <subject>
 
 <body>
 
@@ -27,7 +25,7 @@ The format of your commit message should be as follows:
 Signed-off-by: <user>
 ```
 
-The signed-off-by line can automatically be added by using the `-s` flag when commiting.
+It will automatically be checked by [husky](https://github.com/typicode/husky).
 
 ## Create issues...
 If you would like to implement a new feature, please [raise an issue](https://github.com/ibm-messaging/kafka-java-vertx-starter/issues)
