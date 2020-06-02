@@ -17,40 +17,16 @@ feat|fix|docs|style|refactor|perf|test|chore: changed function X
 
 Further details of the code going into the commit
 
-Contributes to: mhub/qp-planning#XYZ
-Closes: mhub/qp-planning#XYZ
+Contributes to: #XYZ
+Closes: #XYZ
 
-Signed-off-by: Your Name <email@uk.ibm.com>
+Signed-off-by: Your Name <email@address.com>
 ```
 * The reviewer should copy the above text into the extended description field when performing the `squash and merge` from this page.
-
-## Impacted Areas in Application
-List general components of the application that this PR will affect:
-
-## Impacted Areas in Application
-List general components of the application that this PR will affect:
-
-* Component-xyz
 
 ## Checklist
 - [ ] Automated tests exist
 - [ ] Documentation exists [link]()
-- [ ] Chart version incremented
-- [ ] Local git lint performed
-- [ ] Local CV lint performed
 - [ ] Local unit tests performed
-- [ ] Reqd. PRs exist in image repo(s)
 - [ ] Sufficient logging/trace
 - [ ] Desired commit message set as PR title and commit description set above
-
-## Related PRs
-
-repo | branch | PR
---- | --- | ---
-qp-repo-1 | develop | [link]()
-qp-repo-2 | master | [link]()
-
-## Deploy Notes
-Notes regarding deployment of the contained body of work. Are there new deployment steps?
-
-Migration steps?

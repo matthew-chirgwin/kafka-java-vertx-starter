@@ -14,11 +14,6 @@ about: Create a report to help us improve
 
 ## Environment
 
-* Chart name: ?
-* Chart version: ?
-* Repository: ?
-* ICP version: ?
-* Machine: local/fyre/ICP infrastructure ?
 * OS: ?
 * Browser (version): ?
 
