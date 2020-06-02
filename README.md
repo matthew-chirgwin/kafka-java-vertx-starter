@@ -41,6 +41,14 @@ Alternatively you can provide a custom path to the properties file using `-Dprop
 
 If your Kafka is secured you will need to enable the security configuration options in your properties file
 
+## Build prerequisites
+
+To build this project you will need:
+
+- maven `mvn`
+- npm version 6.4.1 or later
+- node 10.15.0 or later
+
 ## Tool Configuration
 
 This repo makes use [Netlify](https://www.netlify.com/) and [Dependabot](https://dependabot.com/).
@@ -52,3 +60,4 @@ We use Netlify to show previews of Storybooks when a change is made to the UI. T
 ### Dependabot
 
 We use Dependabot to make sure we are always keeping our Node and Maven dependencies as up to date as possible. The configuration for this lives in `.dependabot/config.yml`. This describes how often we want our dependencies updates and certain restrictions such as the number of pull requests the bot can make at any one time.
+

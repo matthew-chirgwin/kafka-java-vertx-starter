@@ -8,10 +8,10 @@ module.exports = {
   coverageReporters: ['json', 'text', 'json-summary'],
   collectCoverageFrom: [
     '**/src/**/*.{js,jsx}',
-    '!**/TestUtils/*.js',
-    '!**/*.json',
-    '!**/*.stories.js',
-    '!**/src/index.js',
+    '!**/src/**/index.js',
+    '!**/src/**/*.stories.js',
+    '!**/src/**/*.assets.js',
+    '!**/src/TestUtils/**',
   ],
   coverageDirectory: './coverage/jest/',
   coverageThreshold: {

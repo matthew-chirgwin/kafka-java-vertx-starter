@@ -5,8 +5,6 @@ React component based (ie meaning a Hook would not suitable). These utilities
 are expected to be small helper functions, with comments accompanying them
 to descirbe usage. All naming should be clear and perscriptive.
 
-- Content to follow -
-
 ## File structure
 
 For a new utility function or module, eg `MyUtilModule`, the expected structure 
