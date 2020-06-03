@@ -11,7 +11,6 @@ As a user...
 •Describe end to end flow / end goal*
 
 - *screenshot here*
-- [link to designs](https://google.com)
 
 ## Test Cases
 
