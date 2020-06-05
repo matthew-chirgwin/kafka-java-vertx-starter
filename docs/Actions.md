@@ -21,3 +21,7 @@ This workflow will simply run a `mvn package` which will run the appropriate bui
 #### ui-build-and-test
 
 This workflow will pull node, install the dependencies for the project, and then run `npm build` and `npm test`. These commands will produce a bundle and a coverage report which are then used by the `bundle` and `coverage-report` actions.
+
+#### ui-lint-src
+
+This workflow will use eslint to check the code structure of every source file
