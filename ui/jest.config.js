@@ -16,10 +16,10 @@ module.exports = {
   coverageDirectory: './coverage/jest/',
   coverageThreshold: {
     global: {
-      branches: 90,
-      functions: 92,
-      lines: 94,
-      statements: 94,
+      branches: 100,
+      functions: 100,
+      lines: 100,
+      statements: 100,
     },
   },
   testPathIgnorePatterns: [
