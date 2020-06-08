@@ -40,11 +40,6 @@
         "always",
         72
       ],
-      "body-max-length": [
-        2,
-        "always",
-        72
-      ],
       "footer-max-length": [
         2,
         "always",
