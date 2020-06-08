@@ -19,6 +19,7 @@ import io.vertx.core.http.ServerWebSocket;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.StaticHandler;
+import io.vertx.ext.web.templ.thymeleaf.ThymeleafTemplateEngine;
 import io.vertx.kafka.client.common.TopicPartition;
 import io.vertx.kafka.client.consumer.KafkaConsumer;
 import org.apache.kafka.common.config.SslConfigs;
@@ -40,11 +41,8 @@ public class WebSocketServer extends AbstractVerticle {
 
   @Override
   public void start(Promise<Void> startPromise) {
-    Router router = Router.router(vertx);
-    router.get().handler(StaticHandler.create());
-
     loadKafkaConfig()
-      .compose(config -> startWebSocket(router, config))
+      .compose(config -> createRouterAndStartServer(config))
       .onSuccess(ok -> startPromise.complete())
       .onFailure(startPromise::fail);
   }
@@ -66,6 +64,37 @@ public class WebSocketServer extends AbstractVerticle {
           return Future.failedFuture("Kafka properties file is missing. Either specify using -Dproperties_path=<path> or use the default path of kafka.properties.");
         }
       });
+  }
+
+  private Future<HttpServer> createRouterAndStartServer(JsonObject config) {
+    Router router = Router.router(vertx);
+    final ThymeleafTemplateEngine engine = ThymeleafTemplateEngine.create(vertx);
+
+    router.routeWithRegex(".*js").handler(StaticHandler.create());
+
+    router.route().handler(ctx -> {
+      JsonObject data = new JsonObject();
+      JsonObject props = new JsonObject();
+
+      String topic = Optional.ofNullable(config.getString("topic")).orElse(Main.TOPIC);
+      
+      props.put("topic", topic);
+      props.put("producerPath", PRODUCE_PATH);
+      props.put("consumerPath", CONSUME_PATH);
+
+      data.put("config", props);
+
+      engine.render(data, "webroot/index.html", res -> {
+        if (res.succeeded()) {
+          ctx.response().end(res.result());
+        } else {
+          logger.error(res.cause().getMessage());
+          ctx.fail(res.cause());
+        }
+      });
+    });
+
+    return startWebSocket(router, config);
   }
 
   private Future<HttpServer> startWebSocket(Router router, JsonObject config) {
