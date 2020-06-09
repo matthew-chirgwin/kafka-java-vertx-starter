@@ -46,16 +46,12 @@ If your Kafka is secured you will need to enable the security configuration opti
 To build this project you will need:
 
 - maven `mvn`
-
-If you want to develop the UI, you will also need the following to run the UI
-development tooling:
-
 - npm version 6.4.1 or later
 - node 10.15.0 or later
 
 ## Tool Configuration
 
-This repo makes use [Netlify](https://www.netlify.com/) and [Dependabot](https://dependabot.com/).
+This repo makes use of [Netlify](https://www.netlify.com/) and [Dependabot](https://dependabot.com/).
 
 ### Netlify
 

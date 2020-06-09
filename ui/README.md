@@ -6,6 +6,7 @@ tested and can be further developed can be found in the linked documentation.
 
 ## Content
 - [Getting started](#getting-started)
+- [Developer environment setup](./docs/DevEnv.md)
 - [UI Contribution guide](./docs/Contribution.md)
 - [Code style guidelines](./docs/CodeStyle.md)
 - [Test](./docs/Test.md)
@@ -20,15 +21,18 @@ The UI will require the prerequisites listed [here](../README.md#build-prerequis
 By default, whenever you build the [repo](../README.md#running-the-app), the UI 
 will be built as a part of the `mvn install`. 
 
-It is however possible to develop the UI in isolation. The first step is to 
-download all required dependancies, by running the following in this directory:
+You may also wish to review our [suggested developer environment setup](./docs/DevEnv.md), to make
+developing the UI as easy as possible.
+
+To develop and change the UI, the first step is to download all required 
+dependancies, by running the following in this directory:
 
 ```
 npm install
 ```
 
-Once complete, a number of commands can then be run to develop the UI in 
-isolation. These are detailed below.
+Once complete, a number of commands can then be run to develop the UI. These 
+are detailed below.
 
 Finally, `README.md` files will exist in the various directories in the UI code
 base, to introduce and document how sections of the UI have been developed and
@@ -89,7 +93,7 @@ tests to validate user stories.
 In setting up this UI codebase, we have aimed to satsify the following goals.
 We intend to stick to them, and so should you! :)
 
-- `master` is production - once it is merged, its built and live
+- `master` is production - once it is merged, it's built and live
 - Automate everything - less time doing toil, more time focusing on the end
 product
 - Focus on the user, and run and develop time - keep the user in mind, whoever
