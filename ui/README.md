@@ -28,7 +28,12 @@ npm install
 ```
 
 Once complete, a number of commands can then be run to develop the UI in 
-isolation.
+isolation. These are detailed below.
+
+Finally, `README.md` files will exist in the various directories in the UI code
+base, to introduce and document how sections of the UI have been developed and
+work. They will serve as a good reference to introduce how the particular 
+aspects of the UI works, and how to get started working in any given area.
 
 #### Run UI tests
 

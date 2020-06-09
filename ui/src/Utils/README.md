@@ -15,6 +15,7 @@ src/
     Utils/
         index.js
         MyUtilModule.util.js
+        MyUtilModule.spec.js
 ```
 
 where;
@@ -22,3 +23,4 @@ where;
     When implemented, `MyUtilModule` would be added to that index.js for use
     across the UI.
     - `*.util.js` is the utility module/function
+    - `*.spec.js` are the tests for this utility

@@ -16,3 +16,5 @@ the proposed change/design, and make sure at an early stage that things will
 integrate as expected.
 - Code should be developed in a TDD/Behavioural manner. Including test plans
 or code with an intial discussion issue/PR is highly reccomended!
+- Storybook entries are expected for all new code and changes, unless there
+is an agreed reason why one cannot be reasonably added

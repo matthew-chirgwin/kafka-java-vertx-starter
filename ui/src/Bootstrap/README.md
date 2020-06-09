@@ -8,4 +8,5 @@ the `App` component is to set up application level items, such as intial state,
 user information, and own navigation around the various [`Panel` components](../Panels/README.md).
 
 Code in this directory should be designed and developed as if it were a `Panel`
-component.
+component, with the addition of user story end to end tests, which drive the
+whole UI to achieve the stated user goals.

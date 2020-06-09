@@ -46,11 +46,12 @@ deployment:
 
 ![UI development/test topology](./ArchImages/TopologyDev.jpg)
 
-In this case, the UI, and all its assets, will be served via webpack-dev-server.
-webpack-dev-server enables faster UI development by offering capabilities such
-as hot reloading of code changes into the UI. To provide data to the ui, an
-instance of a mock vertex server will be started. This will serve and act in
-the same way as the real vertx instance which would be connected to Kafka.
+In this case, the UI, and all its assets, will be served via 
+`webpack-dev-server`. `webpack-dev-server` enables faster UI development by 
+offering capabilities such as hot reloading of code changes into the UI. To 
+provide data to the UI, an instance of a mock vertex server will be started. 
+This will serve and act in the same way as the real vertx instance which 
+would be connected to Kafka.
 
 ## UI Structure
 
