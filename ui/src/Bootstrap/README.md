@@ -1,6 +1,6 @@
-# Bootsrap
+# Bootstrap
 
-The Bootsrap directory contains code which bootstraps the UI. This will include
+The Bootstrap directory contains code which bootstraps the UI. This will include
 the application entry point from a build perspective ([build documentation](../../docs/Build.md)), 
 as well as the entry point for SCSS building, `index.scss`. It also will 
 contain the `App` component, which represents the whole UI. The purpose of

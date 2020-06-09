@@ -12,6 +12,7 @@ module.exports = {
     '!**/src/**/*.stories.js',
     '!**/src/**/*.assets.js',
     '!**/src/TestUtils/**',
+    '!**/*.json',
   ],
   coverageDirectory: './coverage/jest/',
   coverageThreshold: {
