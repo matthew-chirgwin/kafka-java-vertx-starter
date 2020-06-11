@@ -40,6 +40,7 @@ such as `describe`, `it` and `expect`:
 
 - `ui/src/Utils`
 - `ui/src/ReactCustomHooks`
+- `ui/src/Contexts`
 
 ### Behavioural test style
 
