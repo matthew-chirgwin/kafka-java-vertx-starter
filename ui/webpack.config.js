@@ -4,12 +4,13 @@ const babelPresets = require('./babelPresets.js');
 const {
   getDevWebpackProxyConfigForMockVertx,
 } = require('./src/DevUtils/MockVertx/MockVertxServer.js');
+const VertXConfig = require('./src/DevUtils/MockVertx/config.json');
 
 const parentDir = path.join(__dirname, './');
 const PUBLIC_DIR = path.resolve(__dirname, './public/');
 const BUILD_DIR = path.resolve(__dirname, '../src/main/resources/webroot');
 
-const MOCK_SERVER_CONFIG = `content='{"topic":"mock_topic","producerPath":"/demoproduce","consumerPath":"/democonsume"}'`;
+const MOCK_SERVER_CONFIG = `content='${JSON.stringify(VertXConfig)}'`;
 const REAL_SERVER_CONFIG = 'th:content="${config}"';
 
 const htmlPlugin = require('html-webpack-plugin');
