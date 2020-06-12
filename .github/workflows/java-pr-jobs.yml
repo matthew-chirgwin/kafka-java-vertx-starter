@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
     - 'src/**'
+    - 'pom.xml'
 
 jobs:
   build:
@@ -17,4 +18,6 @@ jobs:
         with:
           java-version: 1.8
       - name: Build with Maven
-        run: mvn package
+        run: mvn compile
+      - name: Test
+        run: mvn test
