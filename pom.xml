@@ -12,7 +12,7 @@
     <kafka.version>2.3.0</kafka.version>
     <vertx.version>4.0.0-milestone5</vertx.version>
     <jackson-databind.version>2.10.2</jackson-databind.version>
-    <junit.version>5.6.1</junit.version>
+    <junit.version>5.6.2</junit.version>
     <maven.surefire.version>3.0.0-M4</maven.surefire.version>
   </properties>
 
