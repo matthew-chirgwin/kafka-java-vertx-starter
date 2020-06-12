@@ -23,9 +23,9 @@ const ERROR_CHANCE = 5;
 // maps an object of event/handler pairs (config) to the websocket server
 const handleWebsocketEvents = (config = {}) => (ws, { url }) => {
   Object.entries(config).forEach(([event, handler]) => {
-    ws.on(event, (evt) =>
+    ws.on(event, (...args) =>
       handler({
-        data: JSON.parse(evt),
+        calledWith: args,
         url,
         ws,
       })
@@ -52,7 +52,7 @@ const generateModelForConfig = ({
   maxOffsets = MAX_OFFSETS,
   enableLog = false,
   errorChance = ERROR_CHANCE,
-}) => {
+} = {}) => {
   // create in this scope a set of variables which will simulate the state
   // of the producer/consumer
   let consumerConnected = false;
@@ -181,7 +181,8 @@ const generateHandlers = (
   );
   return handleWebsocketEvents({
     ...otherEventHandlers,
-    message: ({ data, url, ws }) => {
+    message: ({ calledWith, url, ws }) => {
+      const data = calledWith.length === 1 ? JSON.parse(calledWith[0]) : {};
       switch (url) {
         case produceEndpoint:
           handleProduceMessage(data, ws);
