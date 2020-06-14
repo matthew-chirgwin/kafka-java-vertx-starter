@@ -8,7 +8,7 @@ async function formatCoverage() {
     );
 
     let coverageText =
-      "## Test Coverage Report\n| File | Lines | Statement | Functions | Branches |\n| --- | --- | --- | --- | --- |\n";
+      "| File | Lines | Statement | Functions | Branches |\n| --- | --- | --- | --- | --- |\n";
 
     const regex = /^\/(.+\/)*(.+)$/;
 
