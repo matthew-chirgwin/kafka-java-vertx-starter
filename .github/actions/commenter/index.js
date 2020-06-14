@@ -25,6 +25,8 @@ async function createComment() {
     const bundleSize = core.getInput("BUNDLE_SIZE");
     const testCoverage = core.getInput("TEST_COVERAGE");
 
+    console.log(testCoverage);
+
     const commentText = `# PR Report\n ## Bundle Size: ${bundleSize}\n ${testCoverage}`;
     comment(commentText);
   } catch (error) {
