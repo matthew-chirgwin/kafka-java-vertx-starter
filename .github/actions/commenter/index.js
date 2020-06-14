@@ -12,8 +12,6 @@ async function getCommentID() {
     issue_number: pull_request_number,
   });
 
-  console.log(comments);
-
   let res = comments.filter((comment) => {
     return comment.user.login === "github-actions[bot]";
   });
@@ -25,9 +23,9 @@ async function getCommentID() {
   }
 }
 
-function comment(message) {
+async function comment(message) {
   try {
-    const commentID = getCommentID();
+    const commentID = await getCommentID();
 
     console.log(commentID);
 
@@ -56,7 +54,7 @@ async function createComment() {
     const testCoverage = core.getInput("TEST_COVERAGE");
 
     const commentText = `# PR Report\n ## Bundle Size: ${bundleSize}\n ${testCoverage}`;
-    comment(commentText);
+    await comment(commentText);
   } catch (error) {
     core.setFailed(error.message);
   }
