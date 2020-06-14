@@ -1,7 +1,8 @@
 import React from 'react';
 
 const App = () => {
-  return <div className="App">UI coming soonishasfasdf!</div>;
+  console.log('test');
+  return <div className="App">UI coming soonish!</div>;
 };
 
 export default App;
