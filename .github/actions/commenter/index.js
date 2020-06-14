@@ -29,11 +29,13 @@ function comment(message) {
   try {
     const commentID = getCommentID();
 
+    console.log(commentID);
+
     if (commentID) {
       octokit.issues.updateComment({
         ...repo,
         issue_number: pull_request_number,
-        comment_id: getCommentID(),
+        comment_id: commentID,
         body: message,
       });
     } else {
