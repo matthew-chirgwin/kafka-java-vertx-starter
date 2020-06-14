@@ -52,7 +52,7 @@ async function createComment() {
     const bundleSize = core.getInput("BUNDLE_SIZE");
     const testCoverage = core.getInput("TEST_COVERAGE");
 
-    const commentText = `# PR Report\n ## Bundle Size: ${bundleSize}\n ## Test Coverage\n${testCoverage} \n Triggered by commit: ${sha}`;
+    const commentText = `# PR Report\n ## Bundle Size: ${bundleSize}\n ## Test Coverage\n${testCoverage} \n\n Triggered by commit: ${sha}`;
     await comment(commentText);
   } catch (error) {
     core.setFailed(error.message);
