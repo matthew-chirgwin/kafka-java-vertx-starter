@@ -1,6 +1,5 @@
 const core = require("@actions/core");
 const github = require("@actions/github");
-const fs = require("fs");
 
 const pull_request_number = github.context.payload.pull_request.number;
 const repo = github.context.repo;
@@ -13,21 +12,37 @@ async function getCommentID() {
     issue_number: pull_request_number,
   });
 
+  console.log(comments);
+
   let res = comments.filter((comment) => {
     return comment.user.login === "github-actions[bot]";
   });
 
-  return res[0].id;
+  if (res.length > 0) {
+    return res[0].id;
+  } else {
+    return null;
+  }
 }
 
 function comment(message) {
   try {
-    octokit.issues.updateComment({
-      ...repo,
-      issue_number: pull_request_number,
-      comment_id: getCommentID(),
-      body: message,
-    });
+    const commentID = getCommentID();
+
+    if (commentID) {
+      octokit.issues.updateComment({
+        ...repo,
+        issue_number: pull_request_number,
+        comment_id: getCommentID(),
+        body: message,
+      });
+    } else {
+      octokit.issues.createComment({
+        ...repo,
+        issue_number: pull_request_number,
+        body: message,
+      });
+    }
   } catch (error) {
     core.setFailed(error.message);
   }
@@ -37,8 +52,6 @@ async function createComment() {
   try {
     const bundleSize = core.getInput("BUNDLE_SIZE");
     const testCoverage = core.getInput("TEST_COVERAGE");
-
-    console.log(testCoverage);
 
     const commentText = `# PR Report\n ## Bundle Size: ${bundleSize}\n ${testCoverage}`;
     comment(commentText);
