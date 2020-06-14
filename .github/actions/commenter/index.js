@@ -3,7 +3,7 @@ const github = require("@actions/github");
 
 const pull_request_number = github.context.payload.pull_request.number;
 const sha = github.context.sha;
-const repo = github.context.repo;
+const repo = github.context.head_ref.object.sha;
 const github_token = core.getInput("GITHUB_TOKEN");
 const octokit = new github.GitHub(github_token);
 
@@ -52,7 +52,7 @@ async function createComment() {
     const bundleSize = core.getInput("BUNDLE_SIZE");
     const testCoverage = core.getInput("TEST_COVERAGE");
 
-    const commentText = `# PR Report\n ## Bundle Size: ${bundleSize}\n ## Test Coverage\n${testCoverage} \n\n Triggered by commit: ${sha}`;
+    const commentText = `# PR Report\n ## Bundle Size\n${bundleSize}\n ## Test Coverage\n${testCoverage}\n\nTriggered by commit: ${sha}`;
     await comment(commentText);
   } catch (error) {
     core.setFailed(error.message);
