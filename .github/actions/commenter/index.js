@@ -2,8 +2,8 @@ const core = require("@actions/core");
 const github = require("@actions/github");
 
 const pull_request_number = github.context.payload.pull_request.number;
-const sha = github.context.head_ref.sha;
-console.log(github.context.head_ref);
+const sha = github.head_ref.sha;
+console.log(github.head_ref);
 const repo = github.context.repo;
 const github_token = core.getInput("GITHUB_TOKEN");
 const octokit = new github.GitHub(github_token);
