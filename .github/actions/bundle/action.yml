@@ -1,8 +1,5 @@
 name: "Bundle size"
 description: "Check the size of the bundle"
-branding:
-  icon: "minimize-2"
-  color: "yellow"
 outputs:
   bundle_size:
     description: "Bundle size of webpack build"

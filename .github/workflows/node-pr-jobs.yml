@@ -35,7 +35,7 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BUNDLE_SIZE: ${{ steps.bundle.outputs.bundle_size }}
-          TEST_COVERAGE: ${{ steps.coverage.outpus.test_coverage }}
+          TEST_COVERAGE: ${{ steps.coverage.outputs.test_coverage }}
 
   lint:
     runs-on: ubuntu-latest
