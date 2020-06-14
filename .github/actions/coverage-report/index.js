@@ -39,7 +39,7 @@ async function formatCoverage() {
       }% |\n`;
     });
 
-    core.setOutput("test_coverage", coverageText);
+    core.setOutput("test_coverage", "test coverage");
   } catch (error) {
     core.setFailed(error.message);
   }
