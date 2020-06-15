@@ -28,7 +28,9 @@ const DEFAULT_STATE = {
   readyState: 3, // Closed
 };
 
-const useWebSocket = (ws, handlers = DEFAULT_HANDLERS) => {
+const useWebSocket = (ws, handlers = {}) => {
+  handlers = { ...DEFAULT_HANDLERS, ...handlers };
+
   let [socketState, updateSocketState] = useState(DEFAULT_STATE);
 
   let socket;

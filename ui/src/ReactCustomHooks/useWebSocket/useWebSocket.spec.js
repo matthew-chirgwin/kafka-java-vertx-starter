@@ -3,9 +3,18 @@ import { useWebSocket } from '../index.js';
 import { renderHook, act } from '@testing-library/react-hooks';
 
 describe('useWebSocket tests', () => {
+  let mockSocket;
+
+  beforeEach(() => {
+    mockSocket = new MockWebSocket(1);
+  });
+
+  afterEach(() => {
+    mockSocket = null;
+  });
+
   it('Calls onOpen callback on open', () => {
     let onOpenStub = jest.fn();
-    let mockSocket = new MockWebSocket(1);
 
     renderHook(() =>
       useWebSocket(() => mockSocket, {
@@ -22,7 +31,6 @@ describe('useWebSocket tests', () => {
 
   it('Calls onClose callback on close', () => {
     let onCloseStub = jest.fn();
-    let mockSocket = new MockWebSocket(1);
 
     renderHook(() =>
       useWebSocket(() => mockSocket, {
@@ -39,7 +47,6 @@ describe('useWebSocket tests', () => {
 
   it('Calls onMessage callback on message', () => {
     let onMessageStub = jest.fn();
-    let mockSocket = new MockWebSocket(1);
     const testMessage = 'hello world!';
 
     renderHook(() =>
@@ -58,7 +65,6 @@ describe('useWebSocket tests', () => {
 
   it('Calls onError callback on error', () => {
     let onErrorStub = jest.fn();
-    let mockSocket = new MockWebSocket(1);
     const testError = 'uh oh';
 
     renderHook(() =>
@@ -79,7 +85,7 @@ describe('useWebSocket tests', () => {
     const sendFunc = jest.fn();
     const testMessage = 'hello';
 
-    let mockSocket = new MockWebSocket(1, sendFunc);
+    mockSocket = new MockWebSocket(1, sendFunc);
     let {
       result: { current: socket },
     } = renderHook(() => useWebSocket(() => mockSocket));
@@ -97,7 +103,7 @@ describe('useWebSocket tests', () => {
   it('readyState represents websocket readystate', () => {
     const readyState = 12;
 
-    let mockSocket = new MockWebSocket(readyState);
+    mockSocket = new MockWebSocket(readyState);
     let {
       result: { current: socket },
     } = renderHook(() => useWebSocket(() => mockSocket));
