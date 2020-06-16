@@ -40,12 +40,12 @@ The result the user would see is:
 In addition, if required, React components can be inserted as well:
 
 ```
-`<p>{translate('WELCOME_WITH_LINK', {
+<p>{translate('WELCOME_WITH_LINK', {
     name: 'John Doe', 
     link: (<a href={'/users/john.doe'} key={'account-link'}>
                 {translate('ACCESS_ACCOUNT')}
            </a>)
-    })</p>`
+    })</p>
 
 ```
 with config
@@ -65,6 +65,33 @@ will return/render to the user:
 
 Do note however that when passing JSX as an insert, it must have a key 
 associated with it ([as per this best practise](https://reactjs.org/docs/lists-and-keys.html#keys)).
+
+Finally, if you want to use a translated string in an HTML attribute, such as
+an `aria-label` or `alt`, you can do so as follows:
+
+```
+<img src={myImage.png} alt={translate('IMAGE_ALT', {}, true)} />
+
+```
+with config
+
+```
+{
+    en: {
+        IMAGE_ALT: 'Descriptive text for this image'
+    }
+}
+```
+
+will return/render to the user:
+
+`<img src={myImage.png} alt='Descriptive text for this image' />`
+
+Note in this case the extra parameter at the end of the translate call. This 
+causes the hook to return a string, rather than JSX (as attribute values need
+to be strings). _Do note that object inserts passed in when called using this
+method will be returned as `[object Object]` - as this is how JS objects are 
+printed when put into a string._
 
 ## Usage
 
@@ -86,15 +113,30 @@ will make up the corpus available for you to use. We recommend 'namespacing'
 your translation keys, eg `MYCOMPONENT_TEXT`, to reduce the chance of 
 collisions.
 
+The full signiture of the returned function is as follows:
+
+`translate(key, inserts, returnAsString)`
+
+- `key` - string, required - the translation key to use to render the desired
+value
+- `inserts` - object, optional - a JS object where the keys match with the 
+above specified `${}` delimeters. At run time, the value for this key is 
+inserted into the returned value.
+- `returnAsString` - boolean, optional, defaults to false - by default, the
+hook will return JSX. By setting this to true, a string value will be returned
+instead. As described above, useful for HTML attribute use cases.
+
 ## Format
 
 The format of the translation bundles is as follows:
 
+```
 {
     <locale> : {
         <key> : <value>
     }
 }
+```
 
 As per usage above, a user of `useTranslate` would provide translations in this
 format, from a file with the `*.i18n.json` suffix. 

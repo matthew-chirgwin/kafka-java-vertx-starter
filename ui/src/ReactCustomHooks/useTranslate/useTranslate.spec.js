@@ -96,7 +96,7 @@ describe('useTranslate hook', () => {
     });
   });
 
-  it('when provided with a bundle, locale, translation key an insert which is JSX, the expected content is returned', () => {
+  it('when provided with a bundle, locale, translation key and insert which is JSX, the expected content is returned', () => {
     const key = 'stringWithJsx';
     const insert = {
       jsx: (
@@ -115,6 +115,31 @@ describe('useTranslate hook', () => {
       const containsTextContent = containsTextContentGenerator(getByText);
       expect(containsTextContent(expectedString)).toBeInTheDocument();
       expect(getByTestId('jsx')).toBeInTheDocument();
+    });
+  });
+
+  it('when provided with a bundle, locale, translation key and returnAsString = true, the expected content is returned', () => {
+    const key = 'string';
+    const expectedString = mockBundle[mockLocale][key];
+    const { result: translate } = renderHook(() =>
+      useTranslate(mockBundle, mockLocale)
+    );
+    // note the true in the translate on the strong element
+    act(() => {
+      const { getByLabelText } = render(
+        translate('stringWithJsx', {
+          jsx: (
+            <strong
+              {...idAttributeGenerator('jsx')}
+              key={'requiredAsNested'}
+              aria-label={translate(key, {}, true)}
+            >
+              {'important insert'}
+            </strong>
+          ),
+        })
+      );
+      expect(getByLabelText(expectedString)).toBeInTheDocument();
     });
   });
 });

@@ -21,7 +21,7 @@ export const useTranslate = (
       ? allTranslationBundles[locale]
       : allTranslationBundles[DEFAULT_LOCALE];
 
-    return (key, insertsToProcess = {}) => {
+    return (key, insertsToProcess = {}, returnAsString = false) => {
       const valueForKey = translationsForLocale[key]
         ? translationsForLocale[key]
         : `${key} provided, but none found for locale ${locale}`;
@@ -39,8 +39,13 @@ export const useTranslate = (
               : acc.concat([part]),
           []
         );
-
-      return <Fragment>{parsedValue}</Fragment>;
+      // if returning a string, iterate through the parsed parts, and stitch it back together.
+      // else, return JSX
+      return returnAsString ? (
+        parsedValue.reduce((acc, nextString) => `${acc}${nextString}`, '')
+      ) : (
+        <Fragment>{parsedValue}</Fragment>
+      );
     };
   }, [currentLocale]);
 };
