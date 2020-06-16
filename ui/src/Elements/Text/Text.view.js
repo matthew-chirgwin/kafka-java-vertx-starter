@@ -25,7 +25,7 @@ const Text = (props) => {
       break;
   }
 
-  const classesToApply = `Text--${typeModifier}${
+  const classesToApply = `Text Text--${typeModifier}${
     className ? ` ${className}` : ''
   }`;
 

@@ -26,7 +26,9 @@ describe('Text Element component', () => {
     content,
     node
   ) =>
-    content === contentExpected && node.classList.contains(classNameExpected);
+    content === contentExpected && // has the expected content
+    node.classList.contains('Text') && // has correct Block class
+    node.classList.contains(classNameExpected); // has the expected classname
 
   it('renders the expected default type if none provided', () => {
     const { getByText } = render(<Text>{text}</Text>);
