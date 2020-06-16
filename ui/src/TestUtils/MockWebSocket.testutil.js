@@ -1,29 +1,37 @@
-class MockWebSocket {
-  constructor(
-    readyState,
-    sendFunc = () => {
-      return;
-    }
-  ) {
-    this.readyState = readyState;
-    this.send = sendFunc;
-  }
+import { NO_OP } from 'Utils';
 
-  open() {
-    this.onopen();
-  }
+const returnMockSocket = ({
+  open = NO_OP,
+  close = NO_OP,
+  message = NO_OP,
+  error = NO_OP,
+} = {}) => {
+  let userSocketEvents = {
+    open: jest.fn().mockImplementation(open),
+    close: jest.fn().mockImplementation(close),
+    message: jest.fn().mockImplementation(message),
+    error: jest.fn().mockImplementation(error),
+  };
 
-  close() {
-    this.onclose();
-  }
+  const addToEventMap = (key, handler) => {
+    userSocketEvents = {
+      ...userSocketEvents,
+      [key]: jest.fn().mockImplementation(handler),
+    };
+  };
 
-  message(message) {
-    this.onmessage(message);
-  }
+  const socket = {
+    addEventListener: jest.fn().mockImplementation(addToEventMap),
+    close: jest.fn(),
+    send: jest.fn(),
+  };
 
-  error(error) {
-    this.onerror(error);
-  }
-}
+  return {
+    getSocket: () => socket,
+    getAddEventListener: () => socket.addEventListener,
+    triggerEvent: (event, ...args) => userSocketEvents[event](...args),
+    getSocketEvent: (event) => userSocketEvents[event],
+  };
+};
 
-module.exports = { MockWebSocket };
+export { returnMockSocket };

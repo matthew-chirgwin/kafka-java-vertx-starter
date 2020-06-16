@@ -2,13 +2,24 @@
 
 This hook in an abstraction of the [WebSocket API](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket).
 
+This hook will manage the opening and closing of the websocket when the 
+component using this hook mounts and unmounts. It also will manage the 
+websocket through it's lifecycle, and will call through to provided 
+callbacks as events occur.
+
+It will return a function which will allow the sending of data (when 
+the websocket allows), and the current status if the websocket.
+
+Details on the usage can be found below. Finally, a set of websocket 
+states are also exported alongside the hook, under the name `WEBSOCKET`.
+
 ## Usage
 
 Create a new websocket:
 
 ```
-const { sendMessage, readyState } = useWebSocket(
-  url,
+const { send, currentState } = useWebSocket(
+  func() => WebSocket,
   {
     onError: func(error),
     onClose: func(),
@@ -18,24 +29,34 @@ const { sendMessage, readyState } = useWebSocket(
 );
 ```
 
-Where `onError`, `onClose`, `onOpen`, `onMessage` are direct mappings of the WebSocket events. Using the hook will automatically open up the WebSocket.
+Where `onError`, `onClose`, `onOpen`, `onMessage` are direct mappings of the
+WebSocket events. For flexability and composability, the first argument 
+provided to the hook should be a function which, on call, will return a new 
+pre-configured websocket. This allows the user control over items such as 
+the protocol to use, as well as the endpoint to connect to.
 
-Check the ready state and send a message:
+The returned values are `send` and `currentState`. `send` is a direct mapping
+to the Websocket's `send` function, and parameters are passed directly to it.
+Do note however that the websocket `send` function will only be invoked if
+the socket is open. To this end, a boolean value will be returned, to indicate
+if the call was completed or not (`false` = no, `true` = yes). 
+
+`currentState` is the state of the websocket. This is provided for 
+informational purposes to the user. The values for the various states are
+exposed in the `WEBSOCKET` export, and could be used as follows:
 
 ```
-if (readyState === WebSocket.OPEN) {
-  sendMessage(message);
+if (currentState === WEBSOCKET.OPEN) {
+  send(message);
 }
 ```
 
-### Providing a custom WebSocket
+The provided `WEBSOCKET` state values are as follows:
 
-Instead of providing a URL to the hook, a function that returns a WebSocket can be used instead. For example:
-
-```
-useWebSocket(() => {
-  const url = myURLGetter();
-
-  return new WebSocket(url)
-});
-```
+- `CONNECTING` - websocket is connecting to backend
+- `OPEN` - websocket connected and ready for work
+- `CLOSING` - websocket is in process of closing
+- `CLOSED` - websocket has been closed
+- `INVALID` - invalid input provided when hook was created
+- `SENT` - requested message sent
+- `NOT_SENT` - requested message not sent, as the websocket was closed

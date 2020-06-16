@@ -1,66 +1,113 @@
-/* eslint-disable no-console */
 import { useState, useEffect } from 'react';
+import { NO_OP, EMPTY_OBJ } from 'Utils';
 
-const SOCKET_NOT_OPEN_ERROR = () => {
-  console.error('Socket is not open yet');
+const WEBSOCKET = {
+  CONNECTING: 0,
+  OPEN: 1,
+  CLOSING: 2,
+  CLOSED: 3,
+  INVALID: 'Invalid WebSocket function provided. See documentation',
+  SENT: true,
+  NOT_SENT: false,
 };
 
-const DEFAULT_HANDLERS = {
-  onError: (error) => {
-    console.error(`Unhandled error: ${error}`);
-    console.error(
-      `Please register 'onError' event handler on useWebSocket hook`
-    );
-  },
-  onClose: () => {
-    return;
-  },
-  onOpen: () => {
-    return;
-  },
-  onMessage: () => {
-    return;
-  },
+const SOCKET_NOT_OPEN_HANDLER = () => {
+  // eslint-disable-next-line no-console
+  console.error('Socket is not open');
+  return WEBSOCKET.NOT_SENT;
 };
 
 const DEFAULT_STATE = {
-  send: SOCKET_NOT_OPEN_ERROR,
-  readyState: 3, // Closed
+  send: SOCKET_NOT_OPEN_HANDLER,
+  currentState: WEBSOCKET.CLOSED,
 };
 
-const useWebSocket = (ws, handlers = {}) => {
-  handlers = { ...DEFAULT_HANDLERS, ...handlers };
+const openWebSocket = (
+  getWebsocket,
+  { onOpen = NO_OP, onMessage = NO_OP, onError, onClose = NO_OP },
+  socketState,
+  updateSocketState
+) => {
+  let closeSocket = NO_OP;
 
+  if (
+    typeof getWebsocket === 'function' &&
+    socketState.currentState !== WebSocket.OPEN
+  ) {
+    const socket = getWebsocket();
+
+    closeSocket = () => {
+      socket.close(); //trigger the close of our socket
+      updateSocketState({ ...socketState, currentState: WEBSOCKET.CLOSING });
+    };
+
+    socket.addEventListener('open', () => {
+      updateSocketState({
+        send: (...args) => {
+          socket.send(...args);
+          return WEBSOCKET.SENT;
+        }, // call send and return sent response
+        currentState: WEBSOCKET.OPEN,
+      });
+      onOpen();
+    });
+
+    socket.addEventListener('message', onMessage);
+    socket.addEventListener('error', (error) => {
+      // if we have a user provided error handler, use that, else default
+      if (typeof onError === 'function') {
+        onError(error);
+      } else {
+        // eslint-disable-next-line no-console
+        console.error(`Unhandled error: ${error}`);
+        // eslint-disable-next-line no-console
+        console.error(
+          `Please register 'onError' event handler on creation of hook`
+        );
+      }
+    });
+    // used in cases such as the backend hanging up etc - update our state to
+    // match
+    socket.addEventListener('close', () => {
+      updateSocketState({
+        ...socketState,
+        send: SOCKET_NOT_OPEN_HANDLER, // change send function to the no op version
+        currentState: WEBSOCKET.CLOSED,
+      });
+      onClose();
+    });
+
+    updateSocketState({
+      ...socketState,
+      close: closeSocket,
+      currentState: WEBSOCKET.CONNECTING,
+    });
+  } else {
+    updateSocketState({
+      ...socketState,
+      currentState: WEBSOCKET.INVALID,
+    });
+  }
+  return closeSocket;
+};
+const useWebSocket = (getWebsocket, handlers = EMPTY_OBJ) => {
   let [socketState, updateSocketState] = useState(DEFAULT_STATE);
-
-  let socket;
+  const { send, currentState } = socketState;
 
   useEffect(() => {
-    if (socketState.readyState !== WebSocket.OPEN) {
-      if (typeof ws === 'function') {
-        socket = ws();
-      } else {
-        socket = new WebSocket(ws);
-      }
-
-      socket.onopen = () => {
-        updateSocketState({
-          send: socket.send.bind(socket),
-          readyState: socket.readyState,
-        });
-        handlers.onOpen();
-      };
-
-      socket.onmessage = handlers.onMessage;
-      socket.onclose = handlers.onClose;
-      socket.onerror = handlers.onError;
-    }
-  });
+    const closeSocket = openWebSocket(
+      getWebsocket,
+      handlers,
+      socketState,
+      updateSocketState
+    );
+    return closeSocket; // will be called on unmount
+  }, []); // only run on first render
 
   return {
-    sendMessage: socketState.send,
-    readyState: socketState.readyState,
+    send,
+    currentState,
   };
 };
 
-export default useWebSocket;
+export { useWebSocket, WEBSOCKET };
