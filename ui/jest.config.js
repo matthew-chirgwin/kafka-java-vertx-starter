@@ -7,9 +7,8 @@ const es_modules = ['lodash-es'];
 
 module.exports = {
   moduleDirectories: ['node_modules', 'TestUtils', __dirname],
-  transformIgnorePatterns: es_modules.reduce(
-    (acc, module) => acc.concat(`<rootDir>/node_modules/(?!${module})`),
-    []
+  transformIgnorePatterns: es_modules.map(
+    (module) => `<rootDir>/node_modules/(?!${module})`
   ),
   transform: {
     '^.+\\.jsx$': 'babel-jest',

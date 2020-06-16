@@ -53,7 +53,7 @@ with config
 ```
 {
     en: {
-        WELCOME: 'Hello ${name}! ${link}',
+        WELCOME_WITH_LINK: 'Hello ${name}! ${link}',
         ACCESS_ACCOUNT: 'Access your account here'
     }
 }
@@ -82,7 +82,7 @@ and as shown above, call the returned function where required:
 ```
 
 Your provided translations will be merged with the default provided set, which
-will make up the corpus available for you to use. We reccomend 'namespacing'
+will make up the corpus available for you to use. We recommend 'namespacing'
 your translation keys, eg `MYCOMPONENT_TEXT`, to reduce the chance of 
 collisions.
 
