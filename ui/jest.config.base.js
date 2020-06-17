@@ -11,26 +11,6 @@ module.exports = {
     '^.+\\.js$': 'babel-jest',
   },
   moduleNameMapper: jestModuleMapper,
-  collectCoverage: true,
-  coverageReporters: ['json', 'text', 'json-summary'],
-  collectCoverageFrom: [
-    '**/src/**/*.{js,jsx}',
-    '!**/src/**/index.js',
-    '!**/src/**/*.stories.js',
-    '!**/src/**/*.assets.js',
-    '!**/src/TestUtils/**',
-    '!**/src/DevUtils/**',
-    '!**/*.json',
-  ],
-  coverageDirectory: './coverage/jest/',
-  coverageThreshold: {
-    global: {
-      branches: 100,
-      functions: 100,
-      lines: 100,
-      statements: 100,
-    },
-  },
   testPathIgnorePatterns: [
     '/node_modules/',
     '/dist/',
