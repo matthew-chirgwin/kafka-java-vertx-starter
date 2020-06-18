@@ -35,6 +35,7 @@ where;
 
 ## List of custom hooks implemented
 
-- useWebsocket <link to readme here>
 - [`useTranslate`](./useTranslate/README.md) - a translation hook, enabling internationalisation
-- useKafkaVertxWebsocket <link to readme here>
+- [`useKafkaVertxWebsocket`](./useKafkaVertxWebSocket/README.md) - a websocket to interact with the Vertx
+backend used by this UI
+- [`useWebSocket`](./useWebSocket/README.md) - a hook to manage and interact with a WebSocket
