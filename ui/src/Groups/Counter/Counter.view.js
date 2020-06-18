@@ -1,8 +1,7 @@
-/* eslint-disable react/no-multi-comp */ // disabled as we have a hoc funtion in file
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Body, BODY, Subheading, Text } from '../../Elements/Text/index.js';
+import { Body, Subheading } from '../../Elements/Text/index.js';
 
 const Counter = (props) => {
   const { title, subtitle, count, countLimit, className, ...others } = props;
@@ -19,16 +18,14 @@ const Counter = (props) => {
 
   return (
     <div {...others} className={classesToApply}>
-      <div className={'Counter--title'}>
+      <div className={'Counter__title'}>
         <Subheading>{title}</Subheading>
       </div>
-      <div className={'Counter--subtitle'}>
+      <div className={'Counter__subtitle'}>
         <Body>{subtitle}</Body>
       </div>
-      <div className={'Counter--count'}>
-        <Text type={BODY} className={'Counter--countValue'}>
-          {countValue}
-        </Text>
+      <div className={'Counter__count'}>
+        <Body className={'Counter__countValue'}>{countValue}</Body>
       </div>
     </div>
   );
@@ -48,6 +45,8 @@ Counter.propTypes = {
 };
 
 Counter.defaultProps = {
+  title: 'Default title',
+  subtitle: 'Default subtitle',
   className: '',
   countLimit: 9999,
 };

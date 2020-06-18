@@ -1,5 +1,5 @@
 .Counter {
-    &--countValue {
+    &__countValue {
         @include carbon--type-style('productive-heading-06');
     }
 }
