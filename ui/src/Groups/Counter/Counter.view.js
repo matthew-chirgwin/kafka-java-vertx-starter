@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 
 import { Body, Subheading } from '../../Elements/Text/index.js';
 
 const Counter = (props) => {
   const { title, subtitle, count, countLimit, className, ...others } = props;
-  const classesToApply = `Counter${className ? ` ${className}` : ''}`;
+  const classesToApply = clsx('Counter', { [className]: className });
 
   let countValue = count;
   if (count < 0) {
