@@ -25,9 +25,7 @@ const Counter = (props) => {
       <div className={'Counter__subtitle'}>
         <Body>{subtitle}</Body>
       </div>
-      <div className={'Counter__count'}>
-        <Body className={'Counter__countValue'}>{countValue}</Body>
-      </div>
+      <div className={'Counter__count'}>{countValue}</div>
     </div>
   );
 };
