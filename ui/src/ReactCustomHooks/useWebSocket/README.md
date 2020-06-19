@@ -11,7 +11,7 @@ It will return a function which will allow the sending of data (when
 the websocket allows), and the current status if the websocket.
 
 Details on the usage can be found below. Finally, a set of websocket 
-states are also exported alongside the hook, under the name `WEBSOCKET`.
+states are also exported alongside the hook, under the name `STATUS`.
 
 ## Usage
 
@@ -30,7 +30,7 @@ const { send, currentState } = useWebSocket(
 ```
 
 Where `onError`, `onClose`, `onOpen`, `onMessage` are direct mappings of the
-WebSocket events. For flexability and composability, the first argument 
+WebSocket events. For flexibility and composability, the first argument 
 provided to the hook should be a function which, on call, will return a new 
 pre-configured websocket. This allows the user control over items such as 
 the protocol to use, as well as the endpoint to connect to.
@@ -43,15 +43,15 @@ if the call was completed or not (`false` = no, `true` = yes).
 
 `currentState` is the state of the websocket. This is provided for 
 informational purposes to the user. The values for the various states are
-exposed in the `WEBSOCKET` export, and could be used as follows:
+exposed in the `STATUS` export, and could be used as follows:
 
 ```
-if (currentState === WEBSOCKET.OPEN) {
+if (currentState === STATUS.OPEN) {
   send(message);
 }
 ```
 
-The provided `WEBSOCKET` state values are as follows:
+The provided `STATUS` state values are as follows:
 
 - `CONNECTING` - websocket is connecting to backend
 - `OPEN` - websocket connected and ready for work

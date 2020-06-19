@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { NO_OP, EMPTY_OBJ } from 'Utils';
 
-const WEBSOCKET = {
-  CONNECTING: 0,
-  OPEN: 1,
-  CLOSING: 2,
-  CLOSED: 3,
+const STATUS = {
+  CONNECTING: WebSocket.CONNECTING,
+  OPEN: WebSocket.OPEN,
+  CLOSING: WebSocket.CLOSING,
+  CLOSED: WebSocket.CLOSED,
   INVALID: 'Invalid WebSocket function provided. See documentation',
   SENT: true,
   NOT_SENT: false,
@@ -14,12 +14,12 @@ const WEBSOCKET = {
 const SOCKET_NOT_OPEN_HANDLER = () => {
   // eslint-disable-next-line no-console
   console.error('Socket is not open');
-  return WEBSOCKET.NOT_SENT;
+  return STATUS.NOT_SENT;
 };
 
 const DEFAULT_STATE = {
   send: SOCKET_NOT_OPEN_HANDLER,
-  currentState: WEBSOCKET.CLOSED,
+  currentState: STATUS.CLOSED,
 };
 
 const openWebSocket = (
@@ -38,16 +38,16 @@ const openWebSocket = (
 
     closeSocket = () => {
       socket.close(); //trigger the close of our socket
-      updateSocketState({ ...socketState, currentState: WEBSOCKET.CLOSING });
+      updateSocketState({ ...socketState, currentState: STATUS.CLOSING });
     };
 
     socket.addEventListener('open', () => {
       updateSocketState({
         send: (...args) => {
           socket.send(...args);
-          return WEBSOCKET.SENT;
+          return STATUS.SENT;
         }, // call send and return sent response
-        currentState: WEBSOCKET.OPEN,
+        currentState: STATUS.OPEN,
       });
       onOpen();
     });
@@ -72,7 +72,7 @@ const openWebSocket = (
       updateSocketState({
         ...socketState,
         send: SOCKET_NOT_OPEN_HANDLER, // change send function to the no op version
-        currentState: WEBSOCKET.CLOSED,
+        currentState: STATUS.CLOSED,
       });
       onClose();
     });
@@ -80,12 +80,12 @@ const openWebSocket = (
     updateSocketState({
       ...socketState,
       close: closeSocket,
-      currentState: WEBSOCKET.CONNECTING,
+      currentState: STATUS.CONNECTING,
     });
   } else {
     updateSocketState({
       ...socketState,
-      currentState: WEBSOCKET.INVALID,
+      currentState: STATUS.INVALID,
     });
   }
   return closeSocket;
@@ -110,4 +110,4 @@ const useWebSocket = (getWebsocket, handlers = EMPTY_OBJ) => {
   };
 };
 
-export { useWebSocket, WEBSOCKET };
+export { useWebSocket, STATUS };

@@ -1,5 +1,5 @@
 import { returnMockSocket, renderHook, act } from 'TestUtils';
-import { useWebSocket, WEBSOCKET } from '../index.js';
+import { useWebSocket, STATUS } from '../index.js';
 
 describe(`useWebSocket hook`, () => {
   let mockWebSocket,
@@ -45,7 +45,7 @@ describe(`useWebSocket hook`, () => {
     // confirm externals as expected - tell the user invalid input provided
     expect(send).toBeDefined();
     expect(currentState).toBeDefined();
-    expect(currentState).toEqual(WEBSOCKET.INVALID);
+    expect(currentState).toEqual(STATUS.INVALID);
   });
   it('provides the user with the expected websocket starting state and externals', () => {
     const { getResultFromHook } = mountHook(mockWebSocket, handlers);
@@ -55,7 +55,7 @@ describe(`useWebSocket hook`, () => {
     // confirm externals as expected
     expect(send).toBeDefined();
     expect(currentState).toBeDefined();
-    expect(currentState).toEqual(WEBSOCKET.CONNECTING);
+    expect(currentState).toEqual(STATUS.CONNECTING);
     // confirm the mock socket has had a request add an event on open
     expect(mockEventListener).toBeCalledTimes(4); // once for each event type
     expect(mockEventListener).toHaveBeenNthCalledWith(
@@ -81,7 +81,7 @@ describe(`useWebSocket hook`, () => {
     // confirm our handler was called
     expect(getSocketEventHandler('open')).toBeCalledTimes(1);
     expect(handlers.onOpen).toBeCalledTimes(1);
-    expect(currentState).toEqual(WEBSOCKET.OPEN); // now should be open
+    expect(currentState).toEqual(STATUS.OPEN); // now should be open
   });
 
   it('binds a default set of handlers if none are provided by the user, allowing the hook to still function', () => {
@@ -96,7 +96,7 @@ describe(`useWebSocket hook`, () => {
     act(() => {
       triggerEvent('open');
     });
-    expect(getResultFromHook('currentState')).toEqual(WEBSOCKET.OPEN); // the hook was able to complete/handle the event as normal
+    expect(getResultFromHook('currentState')).toEqual(STATUS.OPEN); // the hook was able to complete/handle the event as normal
     act(() => {
       triggerEvent('message'); // nothing to observe
     });
@@ -115,7 +115,7 @@ describe(`useWebSocket hook`, () => {
     act(() => {
       triggerEvent('close');
     });
-    expect(getResultFromHook('currentState')).toEqual(WEBSOCKET.CLOSED); // the hook was able to complete/handle the event as normal
+    expect(getResultFromHook('currentState')).toEqual(STATUS.CLOSED); // the hook was able to complete/handle the event as normal
   });
 
   it('correctly binds user provided event socket events', () => {
@@ -162,7 +162,7 @@ describe(`useWebSocket hook`, () => {
     let send = getResultFromHook('send');
     let sendResult;
 
-    expect(getResultFromHook('currentState')).toEqual(WEBSOCKET.CONNECTING); // user should now be told it is opening state to start
+    expect(getResultFromHook('currentState')).toEqual(STATUS.CONNECTING); // user should now be told it is opening state to start
 
     // in this case, of we try and use the
     sendResult = send(mockMessage);
@@ -176,7 +176,7 @@ describe(`useWebSocket hook`, () => {
       triggerEvent('open'); // simulate the socket opening
     });
 
-    expect(getResultFromHook('currentState')).toEqual(WEBSOCKET.OPEN); // user should now be told it is open
+    expect(getResultFromHook('currentState')).toEqual(STATUS.OPEN); // user should now be told it is open
     send = getResultFromHook('send');
     sendResult = send(mockMessage);
     expect(mockWebSocket.send).toHaveBeenCalledTimes(1); // socket send invoked
@@ -187,7 +187,7 @@ describe(`useWebSocket hook`, () => {
       triggerEvent('close'); // simulate the socket closing (for whatever reason)
     });
 
-    expect(getResultFromHook('currentState')).toEqual(WEBSOCKET.CLOSED); // user should now be told it is closed
+    expect(getResultFromHook('currentState')).toEqual(STATUS.CLOSED); // user should now be told it is closed
 
     send = getResultFromHook('send');
     sendResult = send(mockMessage);
@@ -213,7 +213,7 @@ describe(`useWebSocket hook`, () => {
       triggerEvent('open'); // simulate the socket opening so we have a live socket for test purposes
     });
 
-    expect(getResultFromHook('currentState')).toEqual(WEBSOCKET.OPEN); // should now be in open state
+    expect(getResultFromHook('currentState')).toEqual(STATUS.OPEN); // should now be in open state
 
     act(() => {
       unmount(); // unmount
