@@ -5,6 +5,10 @@
         justify-content: space-between;
     }
 
+    &__tile--producer {
+      padding: $spacing-05;
+    }
+
     &__icon {
 
       &--checkmark {

@@ -16,7 +16,8 @@ import clsx from 'clsx';
 
 import { Body } from 'Elements';
 import { useTranslate } from 'ReactCustomHooks';
-import { CONSUMER, PRODUCER, translations } from './Message.assets.js';
+import { CONSTANTS } from 'Utils';
+import translations from './Message.i18n.json';
 
 const Message = (props) => {
   const {
@@ -42,8 +43,13 @@ const Message = (props) => {
   let messageJSX;
   if (error) {
     messageJSX = renderErrorTile(error);
-  } else if (usage === CONSUMER) {
-    messageJSX = renderConsumerMessageTile(translate, message, onInteraction);
+  } else if (usage === CONSTANTS.CONSUMER) {
+    messageJSX = renderConsumerMessageTile(
+      translate,
+      message,
+      isFirst,
+      onInteraction
+    );
   } else {
     messageJSX = renderProducerMessageTile(translate, message, onInteraction);
   }
@@ -51,7 +57,11 @@ const Message = (props) => {
   let firstTagJSX;
   if (isFirst) {
     firstTagJSX = (
-      <Tag className={`Message__tag-${usage}-first`}>{translate('NEWEST')}</Tag>
+      <div>
+        <Tag className={`Message__tag-${usage}-first`}>
+          {translate('NEWEST')}
+        </Tag>
+      </div>
     );
   }
 
@@ -63,14 +73,19 @@ const Message = (props) => {
   );
 };
 
-const renderConsumerMessageTile = (translate, message, onInteraction) => {
+const renderConsumerMessageTile = (
+  translate,
+  message,
+  isFirst,
+  onInteraction
+) => {
   const { partition, offset, timestamp, value } = message;
 
   const valueSize = isEmpty(value) ? '0' : value.length.toString();
   return (
     <ExpandableTile
-      expanded={false}
-      {...getInteractionHandler(onInteraction, CONSUMER, message)}
+      expanded={isFirst}
+      {...getInteractionHandler(onInteraction, CONSTANTS.CONSUMER, message)}
       className={'Message__tile--consumer'}
     >
       <TileAboveTheFoldContent>
@@ -107,7 +122,7 @@ const renderProducerMessageTile = (translate, message, onInteraction) => {
 
   return (
     <ClickableTile
-      {...getInteractionHandler(onInteraction, PRODUCER, message)}
+      {...getInteractionHandler(onInteraction, CONSTANTS.PRODUCER, message)}
       className={'Message__tile--producer'}
     >
       <div>
@@ -189,7 +204,7 @@ Message.propTypes = {
 };
 
 Message.defaultProps = {
-  usage: CONSUMER,
+  usage: CONSTANTS.CONSUMER,
   ...commonDefaultProps,
 };
 
@@ -206,7 +221,7 @@ const withMessageUsage = (usageChoice, name) => {
   return component;
 };
 
-const ProducerMessage = withMessageUsage(PRODUCER, 'ProducerMessage');
-const ConsumerMessage = withMessageUsage(CONSUMER, 'ConsumerMessage');
+const ProducerMessage = withMessageUsage(CONSTANTS.PRODUCER, 'ProducerMessage');
+const ConsumerMessage = withMessageUsage(CONSTANTS.CONSUMER, 'ConsumerMessage');
 
 export { ProducerMessage, ConsumerMessage };

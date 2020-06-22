@@ -1,0 +1,21 @@
+.Messages {
+  display: flex;
+
+  &--consumer {
+    flex-direction: column;
+  }
+
+  .Message {
+    display: flex;
+    flex-direction: column;
+    margin: $spacing-03;
+
+    &__tile--producer, &__tile--error {
+      height: 100%;
+    }
+
+    &--producer:not(.Message--producer-first) {
+      margin-top: $spacing-08;
+    }
+  }
+}
