@@ -1,25 +1,32 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { useWebSocket, STATUS } from 'ReactCustomHooks';
+import { useWebSocket, STATUS, useToggle } from 'ReactCustomHooks';
 import { CONSTANTS } from 'Utils';
 import { throttle } from 'lodash-es';
 
 const onMessage = (messageBuffer, updateMetadata, triggerBufferFlush) => ({
   data = '{"empty": true}',
 }) => {
-  const content = JSON.parse(data);
-  if (!content.empty) {
-    // check if we have a metadata response
-    if (
-      content.tickRate &&
-      (content.consumerStarted || content.producerStarted)
-    ) {
-      updateMetadata(content);
-    } else {
-      // must be a message response. As messages can happen very quickly, we throttle state updates, and store new messages in a buffer
-      // we are modifying refs here - hence the .current
-      messageBuffer.current.push(content);
-      triggerBufferFlush();
+  try {
+    const content = JSON.parse(data);
+    if (!content.empty) {
+      // check if we have a metadata response
+      if (
+        content.tickRate &&
+        (content.consumerStarted || content.producerStarted)
+      ) {
+        updateMetadata(content);
+      } else {
+        // must be a message response. As messages can happen very quickly, we throttle state updates, and store new messages in a buffer
+        // we are modifying refs here - hence the .current
+        messageBuffer.current.push(content);
+        triggerBufferFlush();
+      }
     }
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error(`Error occured while parsing onMessageResponse. Error was:`);
+    // eslint-disable-next-line no-console
+    console.dir(err);
   }
 };
 
@@ -39,7 +46,7 @@ const useManagedMessageState = (maxMessageNumber) => {
       totalErrorMessages,
       messages,
     } = messageStateRef.current;
-    // add a unique id based on the number of prior messages recived, plus a status. Status will be replaced with one from newMessage, if provided
+    // add a unique id based on the number of prior messages received, plus a status. Status will be replaced with one from newMessage, if provided
     const processedMessages = buffer.map((newMessage, index) => ({
       status: CONSTANTS.VERTX_SUCCESS_STATUS,
       index: totalMessages + index + 1,
@@ -56,7 +63,7 @@ const useManagedMessageState = (maxMessageNumber) => {
       totalSuccessMessages + processedMessages.length - newErrors;
     const newTotalOfErrorMessages = totalErrorMessages + newErrors;
     let newMessageSet = [].concat(messages).concat(processedMessages);
-    // lastly, trim any messages over the limit - loosing the oldest
+    // lastly, trim any messages over the limit - losing the oldest
     newMessageSet =
       newMessageSet.length > maxMessageNumber
         ? newMessageSet.slice(
@@ -86,22 +93,27 @@ const useKafkaVertxWebSocket = (
   const [messageState, updateMessageStateWithBuffer] = useManagedMessageState(
     maxMessageNumber
   );
-  const [hasStarted, toggleHasStarted] = useState(false);
+  const [hasStarted, toggleHasStarted] = useToggle(false);
   const messageBuffer = useRef([]);
   const [metadata, setMetadata] = useState({});
+  // disabling lint rule here - throttle returns function, linted cannot detect that
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const triggerBufferFlush = useCallback(
     throttle(() => {
       updateMessageStateWithBuffer(messageBuffer.current.slice(0)); // call the provided callback to process a copy of the buffer
       messageBuffer.current = []; // clear the buffer
-    }, bufferDebouceTimeout)
+    }, bufferDebouceTimeout),
+    []
   );
 
-  useEffect(() => {
-    return triggerBufferFlush.cancel; // clear the triggerBufferFlush function on unmount
-  }, []);
+  useEffect(
+    () => triggerBufferFlush.cancel, // clear the triggerBufferFlush function on unmount
+    [triggerBufferFlush.cancel]
+  );
 
   const { send, currentState } = useWebSocket(getWebsocket, {
     onMessage: onMessage(messageBuffer, setMetadata, triggerBufferFlush),
+    onClose: () => toggleHasStarted(),
   });
 
   const stringifyAndSend = (content) => send(JSON.stringify(content));
@@ -114,14 +126,14 @@ const useKafkaVertxWebSocket = (
         ...additionalStartContent,
         action: 'start',
       });
-      toggleHasStarted(true);
+      toggleHasStarted();
     }
   };
 
   const stop = () => {
     if (isReady) {
       stringifyAndSend({ action: 'stop' });
-      toggleHasStarted(false);
+      toggleHasStarted();
     }
   };
 
