@@ -99,7 +99,7 @@ In your code, you would use the hook as follows:
 
 ```
 import { translations } from 'MyComponent.assets.js';
-import translate = useTranslate(translations);
+const translate = useTranslate(translations);
 ```
 
 and as shown above, call the returned function where required:

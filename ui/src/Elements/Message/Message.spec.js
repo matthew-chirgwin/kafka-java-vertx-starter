@@ -86,6 +86,26 @@ describe('Message Element component', () => {
       ).toBeInTheDocument();
       expect(getByText(testMessage.partition.toString())).toBeInTheDocument();
       expect(getByText(testMessage.offset.toString())).toBeInTheDocument();
+      expect(
+        getByText(confirmHasClassNames('Message__tag-consumer-first'))
+      ).toBeInTheDocument();
+    });
+
+    it('renders the expected component with the isSelected flag', () => {
+      const { getByText } = render(
+        <ConsumerMessage message={testMessage} isSelected />
+      );
+      expect(
+        getByText(
+          confirmHasClassNames(
+            'Message',
+            'Message--consumer',
+            'Message--consumer-selected'
+          )
+        )
+      ).toBeInTheDocument();
+      expect(getByText(testMessage.partition.toString())).toBeInTheDocument();
+      expect(getByText(testMessage.offset.toString())).toBeInTheDocument();
     });
 
     it('renders the expected component with an interaction handler function', () => {
@@ -186,6 +206,26 @@ describe('Message Element component', () => {
             'Message',
             'Message--producer',
             'Message--producer-first'
+          )
+        )
+      ).toBeInTheDocument();
+      expect(getByText(testMessage.partition.toString())).toBeInTheDocument();
+      expect(getByText(testMessage.offset.toString())).toBeInTheDocument();
+      expect(
+        getByText(confirmHasClassNames('Message__tag-producer-first'))
+      ).toBeInTheDocument();
+    });
+
+    it('renders the expected component with the isSelected flag', () => {
+      const { getByText } = render(
+        <ProducerMessage message={testMessage} isSelected />
+      );
+      expect(
+        getByText(
+          confirmHasClassNames(
+            'Message',
+            'Message--producer',
+            'Message--producer-selected'
           )
         )
       ).toBeInTheDocument();

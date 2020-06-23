@@ -3,22 +3,23 @@ import { storiesOf } from '@storybook/react';
 import { withKnobs, text, number, boolean } from '@storybook/addon-knobs';
 import { withInfo } from '@storybook/addon-info';
 import { action } from '@storybook/addon-actions';
-import {
-  ConsumerMessage,
-  ProducerMessage,
-} from './index.js';
+import { ConsumerMessage, ProducerMessage } from './index.js';
 import MessageReadme from './README.md';
 
 const renderHelper = (
   Component,
   defaultErrorMessage,
+  defaultIsFirst = false,
+  defaultIsSelected = false,
   defaultMessagePartition = 0,
   defaultMessageOffset = 100,
   defaultMessageValue = 'Hello World!',
-  defaultMessageTimestamp = new Date().getTime(),
+  defaultMessageTimestamp = new Date().getTime()
 ) => () => {
+  const isFirst = boolean('First message', defaultIsFirst);
+  const isSelected = boolean('Selected message', defaultIsSelected);
   const message = {
-    topic: 'demo'
+    topic: 'demo',
   };
   message.partition = number('Message partition', defaultMessagePartition);
   message.offset = number('Message offset', defaultMessageOffset);
@@ -27,6 +28,8 @@ const renderHelper = (
 
   const className = text('Custom CSS classname', undefined);
   const props = {
+    isFirst,
+    isSelected,
     message,
     className,
     onInteraction: action('handleClick'),
@@ -35,11 +38,11 @@ const renderHelper = (
   const errorMessage = text('Error message', defaultErrorMessage);
   if (errorMessage) {
     props.error = {
-      message: errorMessage
+      message: errorMessage,
     };
   }
 
-  return <Component {...props}/>;
+  return <Component {...props} />;
 };
 
 storiesOf('Elements/Message', module)
@@ -57,6 +60,14 @@ storiesOf('Elements/Message', module)
   .add(
     'ProducerMessage component (default props)',
     renderHelper(ProducerMessage)
+  )
+  .add(
+    'ConsumerMessage component with first message',
+    renderHelper(ConsumerMessage, undefined, true)
+  )
+  .add(
+    'ProducerMessage component with first message',
+    renderHelper(ProducerMessage, undefined, true)
   )
   .add(
     'ConsumerMessage component with error',

@@ -10,6 +10,7 @@ $font-prefix: '~@ibm/plex'; // path to where the font files are
 @import '@carbon/type/scss/styles';
 @import '@carbon/type/scss/font-family';
 @import '@carbon/type/scss/reset';
+@import 'carbon-components/scss/components/tag/_tag.scss';
 @import 'carbon-components/scss/components/tile/_tile.scss';
 
 // include carbon global mixin/changes

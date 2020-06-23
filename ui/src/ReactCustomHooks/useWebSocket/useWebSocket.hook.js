@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { NO_OP, EMPTY_OBJ } from '../../Utils/index.js';
+import { NO_OP, EMPTY_OBJ } from 'Utils';
 
 const STATUS = {
   CONNECTING: WebSocket.CONNECTING,

@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import {
   ClickableTile,
   ExpandableTile,
+  Tag,
   Tile,
   TileAboveTheFoldContent,
   TileBelowTheFoldContent,
@@ -13,15 +14,17 @@ import { CheckmarkFilled16, ErrorFilled16 } from '@carbon/icons-react';
 import { isEmpty, isFunction } from 'lodash-es';
 import clsx from 'clsx';
 
-import { Body } from '../Text/index.js';
-import { useTranslate } from '../../ReactCustomHooks/index.js';
-import { translations, CONSUMER, PRODUCER } from './Message.assets.js';
+import { Body } from 'Elements';
+import { useTranslate } from 'ReactCustomHooks';
+import { CONSUMER, PRODUCER } from './Message.assets.js';
+import translations from './Message.i18n.json';
 
 const Message = (props) => {
   const {
     usage,
     className,
     isFirst,
+    isSelected,
     message,
     error,
     onInteraction,
@@ -30,29 +33,40 @@ const Message = (props) => {
 
   const classesToApply = clsx('Message', `Message--${usage}`, {
     [`Message--${usage}-first`]: isFirst,
+    [`Message--${usage}-selected`]: isSelected,
     [`Message--${usage}-error`]: error,
     [className]: className,
   });
+
+  const translate = useTranslate(translations);
 
   let messageJSX;
   if (error) {
     messageJSX = renderErrorTile(error);
   } else if (usage === CONSUMER) {
-    messageJSX = renderConsumerMessageTile(message, onInteraction);
+    messageJSX = renderConsumerMessageTile(translate, message, onInteraction);
   } else {
-    messageJSX = renderProducerMessageTile(message, onInteraction);
+    messageJSX = renderProducerMessageTile(translate, message, onInteraction);
+  }
+
+  let firstTagJSX;
+  if (isFirst) {
+    firstTagJSX = (
+      <Tag className={`Message__tag-${usage}-first`}>{translate('NEWEST')}</Tag>
+    );
   }
 
   return (
     <div {...others} className={classesToApply}>
+      {firstTagJSX}
       {messageJSX}
     </div>
   );
 };
 
-const renderConsumerMessageTile = (message, onInteraction) => {
+const renderConsumerMessageTile = (translate, message, onInteraction) => {
   const { partition, offset, timestamp, value } = message;
-  const translate = useTranslate(translations);
+
   const valueSize = isEmpty(value) ? '0' : value.length.toString();
   return (
     <ExpandableTile
@@ -89,9 +103,8 @@ const renderConsumerMessageTile = (message, onInteraction) => {
   );
 };
 
-const renderProducerMessageTile = (message, onInteraction) => {
+const renderProducerMessageTile = (translate, message, onInteraction) => {
   const { partition, offset } = message;
-  const translate = useTranslate(translations);
 
   return (
     <ClickableTile
@@ -99,7 +112,9 @@ const renderProducerMessageTile = (message, onInteraction) => {
       className={'Message__tile--producer'}
     >
       <div>
-        <CheckmarkFilled16 className={'Message__icon--checkmark'} />
+        <CheckmarkFilled16
+          className={clsx('Message__icon', 'Message__icon--checkmark')}
+        />
         {renderValueWithLabel(translate('PARTITION'), partition)}
         {renderValueWithLabel(translate('OFFSET'), offset)}
       </div>
@@ -111,7 +126,9 @@ const renderErrorTile = (error) => {
   const { message } = error;
   return (
     <Tile className={'Message__tile--error'}>
-      <ErrorFilled16 className={'Message__icon--error'} />
+      <ErrorFilled16
+        className={clsx('Message__icon', 'Message__icon--error')}
+      />
       <div className={'Message__error-message'}>
         <Body>{message}</Body>
       </div>
@@ -144,6 +161,8 @@ const commonProps = {
   className: PropTypes.string,
   /** optional - indicate the first message */
   isFirst: PropTypes.bool,
+  /** optional - indicate a selected message */
+  isSelected: PropTypes.bool,
   /** optional - Kafka message */
   message: PropTypes.shape({
     topic: PropTypes.string.isRequired,

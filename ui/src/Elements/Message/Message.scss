@@ -8,11 +8,15 @@
     &__icon {
 
       &--checkmark {
-        fill: $support-02;
+        fill: $icon-02;
       }
 
       &--error {
         fill: $support-01;
       }
+    }
+
+    &--producer-first &__icon--checkmark {
+      fill: $support-02;
     }
 }
