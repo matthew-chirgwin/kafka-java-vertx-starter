@@ -1,14 +1,33 @@
-//Disable while stubbing out the panels
 /* eslint-disable react/no-multi-comp */
-import React from 'react';
+/* eslint-disable react/jsx-no-bind */
+//Disabled lint while stubbing out the panels
+import React, { useState } from 'react';
 import { useTranslate } from 'ReactCustomHooks/useTranslate/useTranslate.hook.js';
 import { Body, Subheading, Heading } from 'Elements/Text';
 import translations from './i18n.json';
 import { PropTypes } from 'prop-types';
 import clsx from 'clsx';
 
-const Producer = () => <div>Example Producer</div>;
-const Consumer = () => <div>Example Consumer</div>;
+const Producer = () => {
+  const [messages, updateMessages] = useState([]);
+  return (
+    <>
+      <button
+        aria-label="Start producing messages"
+        onClick={() => updateMessages([...messages, 'payload'])}
+      />
+      <span>Example Producer</span>
+      {messages.map((m, index) => (
+        <div key={index} aria-label="Produced message">
+          {m}
+        </div>
+      ))}
+    </>
+  );
+};
+const Consumer = () => (
+  <div aria-label="Start consuming messages">Example Consumer</div>
+);
 
 const App = (props) => {
   const translate = useTranslate(translations);

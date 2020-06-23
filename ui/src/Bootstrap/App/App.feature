@@ -34,3 +34,11 @@ Scenario: Displays preamble
     And the page contains "sample app subheading"
     And the page contains "sample app heading"
     And the page contains "sample app body"
+
+Scenario: Produces messages
+    Given the following properties
+        | Name | Value |
+        | producer | true |
+    And I have an instance of App
+    When I click to produce a message
+    Then a message is produced

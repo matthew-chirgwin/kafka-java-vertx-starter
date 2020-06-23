@@ -11,7 +11,7 @@ let config = JSON.parse(
 ReactDOM.render(
   <React.StrictMode>
     <ConfigContextProvider value={config}>
-      <App />
+      <App producer consumer />
     </ConfigContextProvider>
   </React.StrictMode>,
   document.getElementById('root')
