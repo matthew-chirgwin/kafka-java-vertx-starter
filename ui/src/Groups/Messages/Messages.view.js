@@ -2,7 +2,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { isEmpty } from 'lodash-es';
 
 import { useTranslate } from 'ReactCustomHooks';
 import { CONSUMER, PRODUCER, translations } from './Messages.assets.js';
@@ -14,7 +13,7 @@ const Messages = (props) => {
   const hasChildren = React.Children.count(children) > 0;
   const classesToApply = clsx('Messages', `Messages--${usage}`, {
     [className]: className,
-    [`Messages--${usage}-empty`]: isEmpty(!hasChildren),
+    [`Messages--${usage}-empty`]: !hasChildren,
   });
   const translate = useTranslate(translations);
 
@@ -47,7 +46,10 @@ const commonProps = {
   /** optional - add any specific styling classes to this component */
   className: PropTypes.string,
   /** optional - child content to render. If this is provided, the expectation is that it will contain either ProducedMessage or ConsumedMessage components. If none provided, empty state will render. */
-  children: PropTypes.node,
+  children: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.arrayOf(PropTypes.element),
+  ]),
 };
 
 const commonDefaultProps = {

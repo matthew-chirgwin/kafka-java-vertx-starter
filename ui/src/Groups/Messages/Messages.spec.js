@@ -21,7 +21,7 @@ describe('Messages Element component', () => {
               error={
                 msg.status === STATUS_ERROR ? { message: 'Error!' } : undefined
               }
-              message={msg}
+              message={msg.status !== STATUS_ERROR ? msg : undefined}
             />
           ))}
         </ConsumerMessages>
@@ -94,7 +94,7 @@ describe('Messages Element component', () => {
               error={
                 msg.status === STATUS_ERROR ? { message: 'Error!' } : undefined
               }
-              message={msg}
+              message={msg.status !== STATUS_ERROR ? msg : undefined}
             />
           ))}
         </ProducerMessages>

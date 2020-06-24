@@ -75,7 +75,9 @@ const Consumer = (props) => {
                 ? { message: translate('ERROR_CONSUMING', {}, true) }
                 : undefined
             }
-            message={msg}
+            message={
+              msg.status !== CONSTANTS.VERTX_ERROR_STATUS ? msg : undefined
+            }
           />
         ))}
       </ConsumerMessages>
