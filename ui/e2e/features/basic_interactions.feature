@@ -3,9 +3,9 @@ Feature: Basic Interactions
 Background:
     Given I am on the homepage
 
-Scenario: I can start producing
-    When I start the producer
-    Then a message appears in the producer list
+# Scenario: I can start producing
+#     When I start the producer
+#     Then a message appears in the producer list
 
 # Scenario: I can pause and restart producing
 #     When I start the producer
