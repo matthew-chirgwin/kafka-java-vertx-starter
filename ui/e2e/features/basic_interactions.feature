@@ -19,10 +19,11 @@ Background:
 #     And I start the producer
 #     Then a message appears in the producer list with payload "test"
 
-# Scenario: I can start consuming
-#     When I start the producer
-#     And I start the consumer
-#     Then a message appears in the consumer list
+Scenario: I can start consuming
+    Then I see no messages have been consumed
+    # When I start the producer
+    And I start the consumer
+    # Then a message appears in the consumer list
 
 # Scenario: I can pause and restart consuming
 #     When I start the producer
