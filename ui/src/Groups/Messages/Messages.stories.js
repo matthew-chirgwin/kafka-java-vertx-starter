@@ -5,61 +5,12 @@ import { withInfo } from '@storybook/addon-info';
 import { action } from '@storybook/addon-actions';
 import { ConsumerMessages, ProducerMessages } from './index.js';
 import { STATUS_SUCCESS, STATUS_ERROR } from './Messages.assets.js';
-
+import { testMessages } from './Messages.spec.assets.js';
 import MessagesReadme from './README.md';
-
-const defaultMessages = [
-  {
-    status: STATUS_SUCCESS,
-    index: 14,
-    topic: 'mock_topic',
-    partition: 0,
-    offset: 13,
-    timestamp: 1592578829809,
-    value: 'Content!',
-  },
-  {
-    status: STATUS_ERROR,
-    index: 15,
-    message: 'Failed!',
-  },
-  {
-    status: STATUS_SUCCESS,
-    index: 16,
-    topic: 'mock_topic',
-    partition: 1,
-    offset: 13,
-    timestamp: 1592578830809,
-    value: 'Content!',
-  },
-  {
-    status: STATUS_SUCCESS,
-    index: 17,
-    topic: 'mock_topic',
-    partition: 0,
-    offset: 14,
-    timestamp: 1592578831809,
-    value: 'Content!',
-  },
-  {
-    status: STATUS_SUCCESS,
-    index: 18,
-    topic: 'mock_topic',
-    partition: 0,
-    offset: 15,
-    timestamp: 1592578832809,
-    value: 'Content!',
-  },
-  {
-    status: STATUS_ERROR,
-    index: 19,
-    message: 'Failed!',
-  },
-];
 
 const renderHelper = (
   Component,
-  messages = defaultMessages,
+  messages = testMessages,
   defaultClassName
 ) => () => {
   const className = text('Custom CSS classname', defaultClassName);

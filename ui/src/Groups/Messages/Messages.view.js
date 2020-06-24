@@ -39,6 +39,9 @@ const Messages = (props) => {
 
 const renderMessage = (message, index, usage, onInteraction) => {
   const props = {
+    className: clsx('Messages__Message', `Messages__Message--${usage}`, {
+      [`Messages__Message--${usage}-first`]: index === 0,
+    }),
     isFirst: index === 0,
     key: `${usage}-${index}`,
     onInteraction,

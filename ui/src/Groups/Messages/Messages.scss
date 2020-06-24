@@ -5,16 +5,10 @@
     flex-direction: column;
   }
 
-  .Message {
-    display: flex;
-    flex-direction: column;
+  &__Message {
     margin: $spacing-03;
 
-    &__tile--producer, &__tile--error {
-      height: 100%;
-    }
-
-    &--producer:not(.Message--producer-first) {
+    &--producer:not(&--producer-first) {
       margin-top: $spacing-08;
     }
   }

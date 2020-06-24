@@ -1,42 +1,11 @@
 import React from 'react';
 import { ProducerMessages, ConsumerMessages } from './index.js';
-import {
-  CONSUMER,
-  PRODUCER,
-  STATUS_SUCCESS,
-  STATUS_ERROR,
-} from './Messages.assets.js';
+import { CONSUMER, PRODUCER } from './Messages.assets.js';
+import { testMessage, testMessages } from './Messages.spec.assets.js';
 import { fireEvent, render } from 'TestUtils';
 
 describe('Messages Element component', () => {
   const testClassName = 'testCssClass';
-  const testMessage = {
-    status: STATUS_SUCCESS,
-    index: 15,
-    topic: 'demo',
-    partition: 2,
-    offset: 1000,
-    timestamp: new Date().getTime(),
-    value: 'Test value data',
-  };
-  const testError = {
-    message: 'Test error',
-    status: STATUS_ERROR,
-    index: 17,
-  };
-  const testMessages = [
-    {
-      ...testMessage,
-    },
-    {
-      ...testMessage,
-      offset: 1001,
-      index: 16,
-    },
-    {
-      ...testError,
-    },
-  ];
 
   const confirmHasClassNames = (...classNamesExpected) => (content, node) =>
     classNamesExpected.every((className) => node.classList.contains(className)); // has all the expected classnames
@@ -50,15 +19,22 @@ describe('Messages Element component', () => {
         getByText(confirmHasClassNames('Messages', 'Messages--consumer'))
       ).toBeInTheDocument();
       expect(
-        getAllByText(confirmHasClassNames('Message', 'Message--consumer'))
-          .length
-      ).toBe(3);
+        getAllByText(
+          confirmHasClassNames(
+            'Message',
+            'Message--consumer',
+            'Messages__Message--consumer'
+          )
+        ).length
+      ).toBe(4);
       expect(
         getByText(
           confirmHasClassNames(
             'Message',
             'Message--consumer',
-            'Message--consumer-first'
+            'Message--consumer-first',
+            'Messages__Message--consumer',
+            'Messages__Message--consumer-first'
           )
         )
       ).toBeInTheDocument();
@@ -67,7 +43,8 @@ describe('Messages Element component', () => {
           confirmHasClassNames(
             'Message',
             'Message--consumer',
-            'Message--consumer-error'
+            'Message--consumer-error',
+            'Messages__Message--consumer'
           )
         )
       ).toBeInTheDocument();
@@ -133,15 +110,22 @@ describe('Messages Element component', () => {
         getByText(confirmHasClassNames('Messages', 'Messages--producer'))
       ).toBeInTheDocument();
       expect(
-        getAllByText(confirmHasClassNames('Message', 'Message--producer'))
-          .length
-      ).toBe(3);
+        getAllByText(
+          confirmHasClassNames(
+            'Message',
+            'Message--producer',
+            'Messages__Message--producer'
+          )
+        ).length
+      ).toBe(4);
       expect(
         getByText(
           confirmHasClassNames(
             'Message',
             'Message--producer',
-            'Message--producer-first'
+            'Message--producer-first',
+            'Messages__Message--producer',
+            'Messages__Message--producer-first'
           )
         )
       ).toBeInTheDocument();
@@ -150,7 +134,8 @@ describe('Messages Element component', () => {
           confirmHasClassNames(
             'Message',
             'Message--producer',
-            'Message--producer-error'
+            'Message--producer-error',
+            'Messages__Message--producer'
           )
         )
       ).toBeInTheDocument();
