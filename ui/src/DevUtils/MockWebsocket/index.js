@@ -1,5 +1,5 @@
-// used in storybook to emulate a socket/the backend behind it
-import { CONSTANTS } from 'Utils';
+// used in storybook/tests to emulate a socket/the backend behind it
+import { CONSTANTS, NO_OP } from 'Utils';
 
 const successShape = (custom = 'Storybook!') => ({
   topic: 'my_topic',
@@ -23,61 +23,75 @@ const consumerMetadata = {
   consumerStarted: true,
 };
 
-const returnErrorOrResponse = (errChance = 0, successResponse = {}) =>
-  Math.floor(Math.random() * 100) > errChance ? successResponse : errorShape;
+// eslint-disable-next-line no-console
+const sendMessage = (sendFn = () => console.error('No message function!')) => (
+  content
+) => sendFn({ data: JSON.stringify(content) });
 
-const mockConsumer = (sendFn, errRate = 0) => () =>
-  sendFn(returnErrorOrResponse(errRate, successShape()));
-
-const mockProducer = (sendFn, errRate = 0, custom) => () =>
-  sendFn(returnErrorOrResponse(errRate, successShape(custom)));
-
-const sendMessage = (sendFn) => (content) =>
-  sendFn({ data: JSON.stringify(content) });
-
-export const mockWebsocket = (
+export const storybookWebsocket = (
   responseType = CONSTANTS.PRODUCER,
   errorRate = 5,
   openingDelay = 200,
-  msgEvery = 500,
-  intitalBacklog = 0
+  msgEvery = 500
+) => {
+  let evtInterval;
+  const mockSocket = controlledWebsocket(responseType, () =>
+    clearInterval(evtInterval)
+  );
+  setTimeout(() => {
+    mockSocket.triggerOpen();
+    evtInterval = setInterval(() => {
+      if (mockSocket.isRunning()) {
+        Math.floor(Math.random() * 100) > errorRate
+          ? mockSocket.sendPayload()
+          : mockSocket.sendErrorPayload();
+      }
+    }, msgEvery);
+  }, openingDelay);
+
+  return mockSocket.getSocket();
+};
+
+export const controlledWebsocket = (
+  socketType = CONSTANTS.PRODUCER,
+  onClose = NO_OP
 ) => {
   let eventListeners = {};
-  let intervalId;
+  let running = false;
 
   return {
-    send: (evt) => {
-      const parsedEvt = JSON.parse(evt);
-      if (parsedEvt.action === 'start' && !intervalId) {
-        const sendMessageFn = sendMessage(eventListeners.message);
-        let dataFn;
-        if (responseType === CONSTANTS.PRODUCER) {
-          //send the metadata event
-          sendMessageFn(producerMetadata);
-          dataFn = mockProducer(sendMessageFn, errorRate, parsedEvt.custom);
-        } else if (responseType === CONSTANTS.CONSUMER) {
-          //send the metadata event
-          sendMessageFn(consumerMetadata);
-          dataFn = mockConsumer(sendMessageFn, errorRate);
+    getSocket: () => ({
+      addEventListener: (evt, handler) => {
+        eventListeners = { ...eventListeners, [evt]: handler };
+      },
+      close: () => {
+        running = false;
+        onClose();
+      },
+      send: (evt) => {
+        const parsedEvt = JSON.parse(evt);
+        if (parsedEvt.action === 'start') {
+          running = true;
+          const sendMessageFn = sendMessage(eventListeners.message);
+          if (socketType === CONSTANTS.PRODUCER) {
+            //send the metadata event
+            sendMessageFn(producerMetadata);
+          } else if (socketType === CONSTANTS.CONSUMER) {
+            //send the metadata event
+            sendMessageFn(consumerMetadata);
+          }
+        } else if (parsedEvt.action === 'stop') {
+          running = false;
         }
-        for (let i = 0; i < intitalBacklog; i++) {
-          dataFn();
-        }
-        intervalId = setInterval(dataFn, msgEvery);
-      } else if (parsedEvt.action === 'stop') {
-        intervalId = clearInterval(intervalId);
-      }
-    },
-    close: () => {
-      if (intervalId !== null) {
-        intervalId = clearInterval(intervalId);
-      }
-    },
-    addEventListener: (evt, handler) => {
-      eventListeners = { ...eventListeners, [evt]: handler };
-      if (evt === 'open') {
-        setTimeout(handler, openingDelay);
-      }
-    },
+      },
+    }),
+    isRunning: () => running,
+    triggerOpen: () => eventListeners.open(),
+    triggerClose: () => eventListeners.close(),
+    sendPayload: (custom) =>
+      eventListeners.message &&
+      sendMessage(eventListeners.message)(successShape(custom)),
+    sendErrorPayload: () =>
+      eventListeners.message && sendMessage(eventListeners.message)(errorShape),
   };
 };

@@ -1,5 +1,6 @@
 import React from 'react';
-import { render, waitFor, fireEvent, act } from 'TestUtils';
+import { render, waitFor, fireEvent } from 'TestUtils';
+import { act } from 'react-dom/test-utils';
 import { Consumer } from './index.js';
 import { consumerMockWebsocketForTest } from './Consumer.assets.js';
 
@@ -7,57 +8,47 @@ const topicName = 'test';
 
 export const stepDefs = (cucumber) => {
   cucumber.defineRule('I have a Consumer panel', async (world) => {
+    world.mockSocket = consumerMockWebsocketForTest();
     world.component = render(
       <Consumer
-        getConsumerWebsocket={consumerMockWebsocketForTest()}
+        getConsumerWebsocket={world.mockSocket.getSocket}
         topic={topicName}
       />
     );
-    const { getByTestId } = world.component;
-    // wait for the websocket to be come live
-    await waitFor(() => {
-      expect(getByTestId('consumer_button')).toBeInTheDocument();
-      expect(getByTestId('consumer_button')).not.toBeDisabled();
-    });
-  });
-
-  cucumber.defineRule(
-    'I have a Consumer panel which experiences consumption errors',
-    async (world) => {
-      world.component = render(
-        <Consumer
-          getConsumerWebsocket={consumerMockWebsocketForTest(100, 0)}
-          topic={topicName}
-        />
-      );
+    await act(async () => {
+      // open the websocket
+      world.mockSocket.triggerOpen();
       const { getByTestId } = world.component;
       // wait for the websocket to be come live
       await waitFor(() => {
         expect(getByTestId('consumer_button')).toBeInTheDocument();
         expect(getByTestId('consumer_button')).not.toBeDisabled();
       });
-    }
-  );
+    });
+  });
+
+  cucumber.defineRule('Error responses are returned', (world) => {
+    act(() => {
+      // emulate an error coming back
+      world.mockSocket.sendErrorPayload();
+    });
+  });
+
+  cucumber.defineRule('responses are returned', (world) => {
+    act(() => {
+      // emulate an response
+      world.mockSocket.sendPayload();
+    });
+  });
 
   cucumber.defineRule(
-    'I have a Consumer panel which has received {string} messages already',
-    async (world, count) => {
-      world.component = render(
-        <Consumer
-          getConsumerWebsocket={consumerMockWebsocketForTest(0, count)}
-          topic={topicName}
-        />
-      );
-      const { getByTestId, getAllByTestId } = world.component;
-      // wait for the websocket to be come live
-      await waitFor(() => {
-        expect(getByTestId('consumer_button')).toBeInTheDocument();
-        expect(getByTestId('consumer_button')).not.toBeDisabled();
-        fireEvent.click(getByTestId('consumer_button'));
-      });
-      await waitFor(() => {
-        expect(getAllByTestId('consumer_consumed_message').length).toBe(count);
-        fireEvent.click(getByTestId('consumer_button'));
+    'I have received {string} messages already',
+    (world, count) => {
+      act(() => {
+        // emulate the count number of messages
+        for (let i = 0; i < Number(count); i++) {
+          world.mockSocket.sendPayload();
+        }
       });
     }
   );
@@ -122,10 +113,25 @@ export const stepDefs = (cucumber) => {
         const { getByText, getAllByTestId } = world.component;
         // wait for the number of messages to increase, but the count (of successful consumption remains the same)
         await waitFor(() => {
-          expect(
-            getAllByTestId('consumer_consumed_message').length
-          ).toBeGreaterThan(0);
+          expect(getAllByTestId('consumer_consumed_message').length).toBe(1);
           expect(getByText('00')).toBeInTheDocument();
+        });
+      });
+    }
+  );
+
+  cucumber.defineRule(
+    'I should be able to see the last {string} messages that have been consumed',
+    async (world, expectedNumberOfMessages) => {
+      await act(async () => {
+        const { getByText, getAllByTestId } = world.component;
+        const count = Number(expectedNumberOfMessages);
+        // confirm that with count + 1 we have an accurate count, but only count messages rendered
+        await waitFor(() => {
+          expect(getAllByTestId('consumer_consumed_message').length).toBe(
+            count
+          );
+          expect(getByText(`${count + 1}`)).toBeInTheDocument();
         });
       });
     }
