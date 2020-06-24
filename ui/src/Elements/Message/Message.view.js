@@ -16,8 +16,7 @@ import clsx from 'clsx';
 
 import { Body } from 'Elements';
 import { useTranslate } from 'ReactCustomHooks';
-import { CONSTANTS } from 'Utils';
-import translations from './Message.i18n.json';
+import { CONSUMER, PRODUCER, translations } from './Message.assets.js';
 
 const Message = (props) => {
   const {
@@ -43,7 +42,7 @@ const Message = (props) => {
   let messageJSX;
   if (error) {
     messageJSX = renderErrorTile(error);
-  } else if (usage === CONSTANTS.CONSUMER) {
+  } else if (usage === CONSUMER) {
     messageJSX = renderConsumerMessageTile(
       translate,
       message,
@@ -85,7 +84,7 @@ const renderConsumerMessageTile = (
   return (
     <ExpandableTile
       expanded={isFirst}
-      {...getInteractionHandler(onInteraction, CONSTANTS.CONSUMER, message)}
+      {...getInteractionHandler(onInteraction, CONSUMER, message)}
       className={'Message__tile--consumer'}
     >
       <TileAboveTheFoldContent>
@@ -122,7 +121,7 @@ const renderProducerMessageTile = (translate, message, onInteraction) => {
 
   return (
     <ClickableTile
-      {...getInteractionHandler(onInteraction, CONSTANTS.PRODUCER, message)}
+      {...getInteractionHandler(onInteraction, PRODUCER, message)}
       className={'Message__tile--producer'}
     >
       <div>
@@ -204,7 +203,7 @@ Message.propTypes = {
 };
 
 Message.defaultProps = {
-  usage: CONSTANTS.CONSUMER,
+  usage: CONSUMER,
   ...commonDefaultProps,
 };
 
@@ -221,7 +220,7 @@ const withMessageUsage = (usageChoice, name) => {
   return component;
 };
 
-const ProducerMessage = withMessageUsage(CONSTANTS.PRODUCER, 'ProducerMessage');
-const ConsumerMessage = withMessageUsage(CONSTANTS.CONSUMER, 'ConsumerMessage');
+const ProducerMessage = withMessageUsage(PRODUCER, 'ProducerMessage');
+const ConsumerMessage = withMessageUsage(CONSUMER, 'ConsumerMessage');
 
 export { ProducerMessage, ConsumerMessage };

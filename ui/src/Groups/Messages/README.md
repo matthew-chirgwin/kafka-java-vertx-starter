@@ -20,6 +20,9 @@ modification of the styling if needed.
 - `messages` - optional - array of a messages, each of which is a shape
   containing the Kafka topic, partition, offset, value and timestamp or a shape
   containing the error details.
+- `onInteraction` - optional - a function invoked on hover, tab, click, etc. The
+  interaction event, `usage` value and `message` value are passed to the
+  function in that order.
 
 Any property which is not matched will be passed onto the parent element
 rendered as a part of this component.

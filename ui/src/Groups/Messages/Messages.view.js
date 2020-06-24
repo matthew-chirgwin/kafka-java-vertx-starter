@@ -5,8 +5,12 @@ import clsx from 'clsx';
 import { isEmpty } from 'lodash-es';
 
 import { useTranslate } from 'ReactCustomHooks';
-import translations from './Messages.i18n.json';
-import { CONSTANTS } from 'Utils';
+import {
+  CONSUMER,
+  PRODUCER,
+  STATUS_ERROR,
+  translations,
+} from './Messages.assets.js';
 import { Body, ConsumerMessage, ProducerMessage, Subheading } from 'Elements';
 
 const Messages = (props) => {
@@ -40,13 +44,13 @@ const renderMessage = (message, index, usage, onInteraction) => {
     onInteraction,
   };
 
-  if (message.status === CONSTANTS.VERTX_ERROR_STATUS) {
+  if (message.status === STATUS_ERROR) {
     props.error = message;
   } else {
     props.message = message;
   }
 
-  return usage === CONSTANTS.CONSUMER ? (
+  return usage === CONSUMER ? (
     <ConsumerMessage {...props} />
   ) : (
     <ProducerMessage {...props} />
@@ -56,7 +60,7 @@ const renderMessage = (message, index, usage, onInteraction) => {
 const renderEmptyMessagesPlaceholder = (translate, usage) => {
   let titleTranslationKey = 'NO_MESSAGES_TITLE_CONSUMER';
   let bodyTranslationKey = 'NO_MESSAGES_BODY_CONSUMER';
-  if (usage === CONSTANTS.PRODUCER) {
+  if (usage === PRODUCER) {
     titleTranslationKey = 'NO_MESSAGES_TITLE_PRODUCER';
     bodyTranslationKey = 'NO_MESSAGES_BODY_PRODUCER';
   }
@@ -109,7 +113,7 @@ Messages.propTypes = {
 };
 
 Messages.defaultProps = {
-  usage: CONSTANTS.CONSUMER,
+  usage: CONSUMER,
   ...commonDefaultProps,
 };
 
@@ -126,13 +130,7 @@ const withMessageUsage = (usageChoice, name) => {
   return component;
 };
 
-const ProducerMessages = withMessageUsage(
-  CONSTANTS.PRODUCER,
-  'ProducerMessages'
-);
-const ConsumerMessages = withMessageUsage(
-  CONSTANTS.CONSUMER,
-  'ConsumerMessages'
-);
+const ProducerMessages = withMessageUsage(PRODUCER, 'ProducerMessages');
+const ConsumerMessages = withMessageUsage(CONSUMER, 'ConsumerMessages');
 
 export { ConsumerMessages, ProducerMessages };

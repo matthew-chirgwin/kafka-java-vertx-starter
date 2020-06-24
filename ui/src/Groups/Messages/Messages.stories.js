@@ -4,11 +4,13 @@ import { withKnobs, text, number } from '@storybook/addon-knobs';
 import { withInfo } from '@storybook/addon-info';
 import { action } from '@storybook/addon-actions';
 import { ConsumerMessages, ProducerMessages } from './index.js';
+import { STATUS_SUCCESS, STATUS_ERROR } from './Messages.assets.js';
+
 import MessagesReadme from './README.md';
 
 const defaultMessages = [
   {
-    status: 'SUCCESS',
+    status: STATUS_SUCCESS,
     index: 14,
     topic: 'mock_topic',
     partition: 0,
@@ -17,12 +19,12 @@ const defaultMessages = [
     value: 'Content!',
   },
   {
-    status: 'ERROR',
+    status: STATUS_ERROR,
     index: 15,
     message: 'Failed!',
   },
   {
-    status: 'SUCCESS',
+    status: STATUS_SUCCESS,
     index: 16,
     topic: 'mock_topic',
     partition: 1,
@@ -31,7 +33,7 @@ const defaultMessages = [
     value: 'Content!',
   },
   {
-    status: 'SUCCESS',
+    status: STATUS_SUCCESS,
     index: 17,
     topic: 'mock_topic',
     partition: 0,
@@ -40,7 +42,7 @@ const defaultMessages = [
     value: 'Content!',
   },
   {
-    status: 'SUCCESS',
+    status: STATUS_SUCCESS,
     index: 18,
     topic: 'mock_topic',
     partition: 0,
@@ -49,7 +51,7 @@ const defaultMessages = [
     value: 'Content!',
   },
   {
-    status: 'ERROR',
+    status: STATUS_ERROR,
     index: 19,
     message: 'Failed!',
   },

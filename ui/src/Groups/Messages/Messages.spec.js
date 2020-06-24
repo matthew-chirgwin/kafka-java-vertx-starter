@@ -1,11 +1,17 @@
 import React from 'react';
 import { ProducerMessages, ConsumerMessages } from './index.js';
+import {
+  CONSUMER,
+  PRODUCER,
+  STATUS_SUCCESS,
+  STATUS_ERROR,
+} from './Messages.assets.js';
 import { fireEvent, render } from 'TestUtils';
 
 describe('Messages Element component', () => {
   const testClassName = 'testCssClass';
   const testMessage = {
-    status: 'SUCCESS',
+    status: STATUS_SUCCESS,
     index: 15,
     topic: 'demo',
     partition: 2,
@@ -15,7 +21,7 @@ describe('Messages Element component', () => {
   };
   const testError = {
     message: 'Test error',
-    status: 'ERROR',
+    status: STATUS_ERROR,
     index: 17,
   };
   const testMessages = [
@@ -25,7 +31,6 @@ describe('Messages Element component', () => {
     {
       ...testMessage,
       offset: 1001,
-      status: 'SUCCESS',
       index: 16,
     },
     {
@@ -95,7 +100,7 @@ describe('Messages Element component', () => {
       expect(testOnInteraction).toHaveBeenCalledTimes(1);
       expect(testOnInteraction).toHaveBeenCalledWith(
         expect.anything(),
-        'consumer',
+        CONSUMER,
         testMessage
       );
     });
@@ -178,7 +183,7 @@ describe('Messages Element component', () => {
       expect(testOnInteraction).toHaveBeenCalledTimes(1);
       expect(testOnInteraction).toHaveBeenCalledWith(
         expect.anything(),
-        'producer',
+        PRODUCER,
         testMessage
       );
     });
