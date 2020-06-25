@@ -22,65 +22,51 @@ const App = (props) => {
   return (
     <div className={clsx('App', className)}>
       <Grid>
-        <Row>
-          <Column
-            {...commonColumnProps}
-            className={'App App__column--producer'}
-          >
-            <div className={'App__summary'}>
-              <img
-                alt={translate('logo_alt', {}, true)}
-                src={es_logo}
-                className={'App App__summary_icon'}
-              />
-              <div>
-                <Subheading className={'App App__summary_subheading'}>
-                  {translate('app_name')}
-                </Subheading>
-              </div>
-              <div>
-                <Heading className={'App App__summary_heading'}>
-                  {translate('heading')}
-                </Heading>
-              </div>
-              <div className={'App__summary_body-container'}>
-                <Body className={'App App__summary_body'}>
-                  {translate('body')}
-                </Body>
-              </div>
-            </div>
-          </Column>
-          <Column
-            {...commonColumnProps}
-            className={'App App__column--consumer'}
-          />
-        </Row>
         <ConfigContextConsumer>
-          {({ topic, producerPath, consumerPath }) => {
-            return (
-              <Row>
-                {producer && (
-                  <Column
-                    {...commonColumnProps}
-                    className={'App App__column--producer'}
-                  >
-                    <div>{`Producer here for ${topic} at ${producerPath}`}</div>
-                  </Column>
-                )}
-                {consumer && (
-                  <Column
-                    {...commonColumnProps}
-                    className={'App App__column--consumer'}
-                  >
-                    <Consumer
-                      getConsumerWebsocket={websocketFactory(consumerPath)}
-                      topic={topic}
+          {({ topic, producerPath, consumerPath }) => (
+            <Row>
+              <Column {...commonColumnProps} className={'App'}>
+                <div className={'App__producer'}>
+                  <div className={'App__summary'}>
+                    <img
+                      alt={translate('logo_alt', {}, true)}
+                      src={es_logo}
+                      className={'App App__summary_icon'}
                     />
-                  </Column>
+                    <div>
+                      <Subheading className={'App App__summary_subheading'}>
+                        {translate('app_name')}
+                      </Subheading>
+                    </div>
+                    <div>
+                      <Heading className={'App App__summary_heading'}>
+                        {translate('heading')}
+                      </Heading>
+                    </div>
+                    <div className={'App__summary_body-container'}>
+                      <Body className={'App App__summary_body'}>
+                        {translate('body')}
+                      </Body>
+                    </div>
+                  </div>
+                  {producer && (
+                    <div>{`Producer here for ${topic} at ${producerPath}`}</div>
+                  )}
+                </div>
+              </Column>
+              <Column
+                {...commonColumnProps}
+                className={'App App__column--consumer'}
+              >
+                {consumer && (
+                  <Consumer
+                    getConsumerWebsocket={websocketFactory(consumerPath)}
+                    topic={topic}
+                  />
                 )}
-              </Row>
-            );
-          }}
+              </Column>
+            </Row>
+          )}
         </ConfigContextConsumer>
       </Grid>
     </div>

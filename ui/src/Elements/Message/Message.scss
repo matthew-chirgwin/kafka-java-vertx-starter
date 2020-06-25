@@ -14,15 +14,23 @@
         margin-right: $spacing-02;
     }
 
+    &__tile--error,
     &__tile--consumer {
         margin-top: $spacing-02;
         margin-bottom: $spacing-02;
     }
 
+    &__tile--error:first-of-type,
+    &__tile--consumer:first-of-type {
+        margin-bottom: 0;
+    }
+
     &__tile--producer,
     &__tile--consumer {
         &--selected {
+            @include carbon--theme($carbon--theme--g90) {
             background: $hover-ui;
+            }
         }
     }
 
@@ -39,6 +47,23 @@
         &--error {
             fill: $support-01;
         }
+    }
+
+    &__consumer {
+        
+        &-partition-offset-container {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+        }
+
+        &-payload {
+            margin-top: $layout-01;
+        }
+    }
+
+    &__labelled-value:not(:first-of-type) {
+        margin-left: $layout-02;
     }
 
     &--producer-first,

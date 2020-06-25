@@ -4,4 +4,22 @@
   &--consumer {
     flex-direction: column;
   }
+
+  &__empty {
+    padding-top: $layout-03;
+    margin-top: $layout-03;
+    border-top: 1px solid $ui-03;
+
+    &-title-container {
+      margin-bottom: $spacing-02;
+    }
+
+    &-title {
+      @include carbon--type-style('productive-heading-01');
+    }
+
+    &-body {
+     color: $text-02;
+    }
+  }
 }

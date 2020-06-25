@@ -101,7 +101,7 @@ const renderConsumerMessageTile = (
     >
       <TileAboveTheFoldContent>
         <div className={'Message__consumer-details'}>
-          <div>
+          <div className={'Message__consumer-partition-offset-container'}>
             {renderValueWithLabel(translate('PARTITION'), partition)}
             {renderValueWithLabel(translate('OFFSET'), offset)}
           </div>

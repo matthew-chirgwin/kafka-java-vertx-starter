@@ -57,6 +57,7 @@ const Consumer = (props) => {
         <Button
           disabled={!isReady}
           onClick={onButtonClick}
+          size={'field'}
           {...idAttributeGenerator('consumer_button')}
         >
           {isRunning

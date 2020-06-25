@@ -1,8 +1,10 @@
 .App {
 
+  $summary-height: $layout-07 * 2;
+
   &__summary {
     padding-top: $layout-05;
-    min-height: $layout-07 * 2;
+    min-height: $summary-height;
     padding-left: $layout-03;
     padding-right:$layout-03;
 
@@ -32,15 +34,17 @@
 
   }
 
-  &__column {
+  &__producer {
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+  }
 
-    &--producer {
-      top: 0px;
-      position: sticky;
-    }
+  &__column {
 
     &--consumer {
       background-color: $ui-01;
+      padding-top: $summary-height;
     }
   }
 }
