@@ -15,7 +15,7 @@ import { CheckmarkFilled16, ErrorFilled16 } from '@carbon/icons-react';
 import { isEmpty, isFunction } from 'lodash-es';
 import clsx from 'clsx';
 
-import { Body, Label } from 'Elements';
+import { Label } from 'Elements';
 import { useTranslate } from 'ReactCustomHooks';
 import { CONSUMER, PRODUCER, translations } from './Message.assets.js';
 import { idAttributeGenerator } from 'Utils';
@@ -103,7 +103,11 @@ const renderConsumerMessageTile = (
         <div className={'Message__consumer-details'}>
           <div className={'Message__consumer-partition-offset-container'}>
             {renderValueWithLabel(translate('PARTITION'), partition)}
-            {renderValueWithLabel(translate('OFFSET'), offset)}
+            {renderValueWithLabel(
+              translate('OFFSET'),
+              offset,
+              'Message__consumer-partition-offset'
+            )}
           </div>
           <div>
             <div>
@@ -141,18 +145,21 @@ const renderProducerMessageTile = (
   return (
     <ClickableTile
       {...getInteractionHandler(onInteraction, PRODUCER, message)}
-      className={clsx('Message', 'Message__tile--producer', {
-        [`Message__tile--producer--selected`]: isSelected,
-      })}
+      className={clsx(
+        'Message',
+        'Message__producer',
+        'Message__tile--producer',
+        {
+          [`Message__tile--producer--selected`]: isSelected,
+        }
+      )}
       {...idAttributeGenerator('produced_message_tile')}
     >
-      <div>
-        <CheckmarkFilled16
-          className={clsx('Message__icon', 'Message__icon--checkmark')}
-        />
-        {renderValueWithLabel(translate('PARTITION'), partition)}
-        {renderValueWithLabel(translate('OFFSET'), offset)}
-      </div>
+      <CheckmarkFilled16
+        className={clsx('Message__icon', 'Message__icon--checkmark')}
+      />
+      {renderValueWithLabel(translate('PARTITION'), partition)}
+      {renderValueWithLabel(translate('OFFSET'), offset)}
     </ClickableTile>
   );
 };
@@ -164,16 +171,16 @@ const renderErrorTile = (error) => {
       <ErrorFilled16
         className={clsx('Message__icon', 'Message__icon--error')}
       />
-      <div className={'Message__error-message'}>
-        <Body>{message}</Body>
+      <div>
+        <Label className={'Message__error-message'}>{message}</Label>
       </div>
     </Tile>
   );
 };
 
-const renderValueWithLabel = (label, value) => {
+const renderValueWithLabel = (label, value, additionalClasses) => {
   return (
-    <div className={'Message__labelled-value'}>
+    <div className={clsx('Message__labelled-value', additionalClasses)}>
       <div>
         <Label className={'Message__label'}>{label}</Label>
       </div>
@@ -187,6 +194,7 @@ const getInteractionHandler = (onInteraction, usage, message) => {
 
   if (isFunction(onInteraction)) {
     handlerProps.handleClick = (event) => onInteraction(event, usage, message);
+    handlerProps.onMouseEnter = (event) => onInteraction(event, usage, message);
   }
   return handlerProps;
 };

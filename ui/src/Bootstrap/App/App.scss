@@ -1,12 +1,10 @@
 .App {
 
-  $summary-height: $layout-07 * 2;
+  $summary-height: $layout-06 * 3;
 
   &__summary {
     padding-top: $layout-05;
     min-height: $summary-height;
-    padding-left: $layout-03;
-    padding-right:$layout-03;
 
     &_icon {
       height: $spacing-08;

@@ -1,6 +1,12 @@
 .Message {
     display: flex;
     flex-direction: column;
+    min-width: unset;
+    position: relative;
+
+    &__error-message {
+        color: $text-02;
+    }
 
     &__consumer-details {
         display: flex;
@@ -10,19 +16,6 @@
 
     &__tile--producer {
         padding: $spacing-05;
-        margin-left: $spacing-02;
-        margin-right: $spacing-02;
-    }
-
-    &__tile--error,
-    &__tile--consumer {
-        margin-top: $spacing-02;
-        margin-bottom: $spacing-02;
-    }
-
-    &__tile--error:first-of-type,
-    &__tile--consumer:first-of-type {
-        margin-bottom: 0;
     }
 
     &__tile--producer,
@@ -39,7 +32,7 @@
     }
 
     &__icon {
-
+        margin-bottom: $spacing-02;
         &--checkmark {
             fill: $icon-02;
         }
@@ -50,34 +43,56 @@
     }
 
     &__consumer {
-        
-        &-partition-offset-container {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: nowrap;
-        }
+
+        &-partition-offset {
+            margin-left: $layout-02;
+            &-container {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: nowrap;
+            }
+        }      
 
         &-payload {
             margin-top: $layout-01;
         }
     }
 
-    &__labelled-value:not(:first-of-type) {
-        margin-left: $layout-02;
+    &__labelled-value {
+        margin-bottom: $spacing-02;
+        &:last-of-type() {
+          margin-bottom: 0;
+        }
+    }
+
+    &--producer {
+        align-self: flex-end;
+        height: 100%;
     }
 
     &--producer-first,
     &--consumer-first {
-        margin-top: $spacing-07;
         position: relative;
     }
 
-    &--producer-first {
-        margin-right: carbon--mini-units(1.75);
+    &--producer:nth-of-type(2):before {
+        position: absolute;
+        display: block;
+        content: " ";
+        background: $ui-background;
+        width: 100%;
+        top: -$spacing-01;
+        bottom: -$spacing-01;
     }
 
-    &--consumer-first {
-        margin-bottom: carbon--mini-units(1.75);
+    &--consumer:nth-of-type(2):before {
+        position: absolute;
+        display: block;
+        content: " ";
+        background: $ui-01;
+        height: 100%;
+        left: -$spacing-01;
+        right: -$spacing-01;
     }
 
     &__first-container {
