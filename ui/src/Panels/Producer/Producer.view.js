@@ -6,6 +6,7 @@ import { debounce, get } from 'lodash-es';
 
 import { translations } from './Producer.assets.js';
 import { CONSTANTS, idAttributeGenerator } from 'Utils';
+import { SelectedMessageConsumer } from 'Contexts';
 import { Counter, ProducerMessages } from 'Groups';
 import { ProducerMessage } from 'Elements';
 import {
@@ -44,7 +45,7 @@ const Producer = (props) => {
     if (producerRunning) {
       stop();
     } else {
-      start({ value: messageValue });
+      start({ custom: messageValue });
     }
     toggleProducerRunning();
   };
@@ -88,22 +89,32 @@ const Producer = (props) => {
       </div>
       <ProducerMessages>
         {messages.map((msg, index) => (
-          <ProducerMessage
-            className={clsx('Producer__Message', {
-              ['Producer__Message--first']: index === 0,
-            })}
-            {...idAttributeGenerator('producer_produced_message')}
-            key={`produced-message-${index}:${msg.index}`}
-            isFirst={index === 0}
-            error={
-              msg.status === CONSTANTS.VERTX_ERROR_STATUS
-                ? { message: translate('ERROR_PRODUCING', {}, true) }
-                : undefined
-            }
-            message={
-              msg.status !== CONSTANTS.VERTX_ERROR_STATUS ? msg : undefined
-            }
-          />
+          <SelectedMessageConsumer key={`smc-${index}:${msg.index}`}>
+            {({ updateSelectedMessage, isSameAsSelected }) => {
+              return (
+                <ProducerMessage
+                  className={clsx('Producer__message', {
+                    ['Producer__message--first']: index === 0,
+                  })}
+                  {...idAttributeGenerator('producer_produced_message')}
+                  key={`produced-message-${index}:${msg.index}`}
+                  isFirst={index === 0}
+                  isSelected={isSameAsSelected(msg)}
+                  onInteraction={() => updateSelectedMessage(msg)}
+                  error={
+                    msg.status === CONSTANTS.VERTX_ERROR_STATUS
+                      ? { message: translate('ERROR_PRODUCING', {}, true) }
+                      : undefined
+                  }
+                  message={
+                    msg.status !== CONSTANTS.VERTX_ERROR_STATUS
+                      ? msg
+                      : undefined
+                  }
+                />
+              );
+            }}
+          </SelectedMessageConsumer>
         ))}
       </ProducerMessages>
     </div>

@@ -26,6 +26,12 @@ Scenario: As a user, I am shown error states if production fails
     And Error responses are returned
     Then I should be shown error messages for those production failures
 
+Scenario: As a user, I can interact and be shown the currently selected message
+    Given I have a Producer panel
+    And I have produced "5" messages already
+    When I interact with produced message "2"
+    Then produced message "2" is shown as selected
+
 Scenario: As a user, I can see what has been produced so far
     Given I have a Producer panel
     And I have produced "5" messages already

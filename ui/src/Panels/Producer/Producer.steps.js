@@ -1,5 +1,12 @@
 import React from 'react';
-import { render, waitFor, fireEvent, useFakeTimers } from 'TestUtils';
+import {
+  render,
+  waitFor,
+  fireEvent,
+  useFakeTimers,
+  within,
+  confirmHasClassNames,
+} from 'TestUtils';
 import { act } from 'react-dom/test-utils';
 import { Producer } from './index.js';
 import { producerMockWebsocketForTest } from './Producer.assets.js';
@@ -173,11 +180,68 @@ export const stepDefs = (cucumber) => {
         await waitFor(() => {
           expect(world.mockSocketOnStart).toHaveBeenCalledWith(
             JSON.stringify({
-              value: expectedMessageValue,
+              custom: expectedMessageValue,
               action: 'start',
             })
           );
         });
+      });
+    }
+  );
+
+  cucumber.defineRule(
+    'I interact with produced message {string}',
+    async (world, count) => {
+      await act(async () => {
+        const { getAllByTestId } = world.component;
+        const messageWanted = Number(count);
+        let messageToInteractWith;
+        // wait for it to appear
+        await waitFor(() => {
+          expect(
+            getAllByTestId('producer_produced_message').length
+          ).toBeGreaterThan(messageWanted);
+          const message = getAllByTestId('producer_produced_message')[
+            messageWanted - 1
+          ];
+
+          messageToInteractWith = within(message).getByTestId(
+            'produced_message_tile'
+          );
+          expect(messageToInteractWith).toBeInTheDocument();
+        });
+        // click it
+        fireEvent.click(messageToInteractWith);
+      });
+    }
+  );
+
+  cucumber.defineRule(
+    'produced message {string} is shown as selected',
+    async (world, count) => {
+      await act(async () => {
+        const { getAllByTestId } = world.component;
+        const messageWanted = Number(count);
+        // wait for it to appear
+        await waitFor(() => {
+          expect(
+            getAllByTestId('producer_produced_message').length
+          ).toBeGreaterThan(messageWanted);
+        });
+        const message = getAllByTestId('producer_produced_message')[
+          messageWanted - 1
+        ];
+        expect(message).toBeInTheDocument();
+        // confirm it has the classname expected
+        expect(
+          within(message).getByText(
+            confirmHasClassNames(
+              'Message',
+              'Message--producer',
+              'Message--producer-selected'
+            )
+          )
+        ).toBeInTheDocument();
       });
     }
   );

@@ -12,9 +12,9 @@
         display: flex;
         justify-content: space-between;
     }
-    &__Message {
+    &__message {
         max-width: 20%;
-        &:not(.Producer__Message--first) {
+        &:not(.Producer__message--first) {
             margin-top: $spacing-08;
         }
     }
