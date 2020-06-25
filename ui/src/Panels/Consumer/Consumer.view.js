@@ -52,7 +52,6 @@ const Consumer = (props) => {
         title={translate('MESSAGES_CONSUMED', {}, true)}
         subtitle={translate('FROM_TOPIC', { topic }, true)}
         count={totalSuccessMessages}
-        className={'Consumer__count'}
       />
       <div className={'Consumer__control'}>
         <Button

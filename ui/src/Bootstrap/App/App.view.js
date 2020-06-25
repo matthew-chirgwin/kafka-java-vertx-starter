@@ -25,27 +25,29 @@ const App = (props) => {
         <Row>
           <Column
             {...commonColumnProps}
-            className={'App App__column--producer App__summary'}
+            className={'App App__column--producer'}
           >
-            <img
-              alt={translate('logo_alt', {}, true)}
-              src={es_logo}
-              className={'App App__summary_icon'}
-            />
-            <div>
-              <Subheading className={'App App__summary_subheading'}>
-                {translate('app_name')}
-              </Subheading>
-            </div>
-            <div>
-              <Heading className={'App App__summary_heading'}>
-                {translate('heading')}
-              </Heading>
-            </div>
-            <div>
-              <Body className={'App App__summary_body'}>
-                {translate('body')}
-              </Body>
+            <div className={'App__summary'}>
+              <img
+                alt={translate('logo_alt', {}, true)}
+                src={es_logo}
+                className={'App App__summary_icon'}
+              />
+              <div>
+                <Subheading className={'App App__summary_subheading'}>
+                  {translate('app_name')}
+                </Subheading>
+              </div>
+              <div>
+                <Heading className={'App App__summary_heading'}>
+                  {translate('heading')}
+                </Heading>
+              </div>
+              <div className={'App__summary_body-container'}>
+                <Body className={'App App__summary_body'}>
+                  {translate('body')}
+                </Body>
+              </div>
             </div>
           </Column>
           <Column

@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-for */ // false positive
 /* eslint-disable react/no-multi-comp */ // disabled as we have a hoc funtion in file
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -14,7 +15,7 @@ import { CheckmarkFilled16, ErrorFilled16 } from '@carbon/icons-react';
 import { isEmpty, isFunction } from 'lodash-es';
 import clsx from 'clsx';
 
-import { Body } from 'Elements';
+import { Body, Label } from 'Elements';
 import { useTranslate } from 'ReactCustomHooks';
 import { CONSUMER, PRODUCER, translations } from './Message.assets.js';
 import { idAttributeGenerator } from 'Utils';
@@ -48,16 +49,22 @@ const Message = (props) => {
       translate,
       message,
       isFirst,
-      onInteraction
+      onInteraction,
+      isSelected
     );
   } else {
-    messageJSX = renderProducerMessageTile(translate, message, onInteraction);
+    messageJSX = renderProducerMessageTile(
+      translate,
+      message,
+      onInteraction,
+      isSelected
+    );
   }
 
   let firstTagJSX;
   if (isFirst) {
     firstTagJSX = (
-      <div>
+      <div className={`Message__first-container`}>
         <Tag className={`Message__tag-${usage}-first`}>
           {translate('NEWEST')}
         </Tag>
@@ -77,7 +84,8 @@ const renderConsumerMessageTile = (
   translate,
   message,
   isFirst,
-  onInteraction
+  onInteraction,
+  isSelected
 ) => {
   const { partition, offset, timestamp, value } = message;
 
@@ -86,7 +94,9 @@ const renderConsumerMessageTile = (
     <ExpandableTile
       expanded={isFirst}
       {...getInteractionHandler(onInteraction, CONSUMER, message)}
-      className={'Message__tile--consumer'}
+      className={clsx('Message__tile--consumer', {
+        [`Message__tile--consumer--selected`]: isSelected,
+      })}
       {...idAttributeGenerator('consumed_message_tile')}
     >
       <TileAboveTheFoldContent>
@@ -97,14 +107,16 @@ const renderConsumerMessageTile = (
           </div>
           <div>
             <div>
-              <Body>
+              <Label className={'Message__label'}>
                 {translate('CONSUMED_AT', {
                   timestamp: new Date(timestamp).toLocaleString(),
                 })}
-              </Body>
+              </Label>
             </div>
             <div>
-              <Body>{translate('SIZE', { bytesCount: valueSize })}</Body>
+              <Label className={'Message__label'}>
+                {translate('SIZE', { bytesCount: valueSize })}{' '}
+              </Label>
             </div>
           </div>
         </div>
@@ -118,13 +130,20 @@ const renderConsumerMessageTile = (
   );
 };
 
-const renderProducerMessageTile = (translate, message, onInteraction) => {
+const renderProducerMessageTile = (
+  translate,
+  message,
+  onInteraction,
+  isSelected
+) => {
   const { partition, offset } = message;
 
   return (
     <ClickableTile
       {...getInteractionHandler(onInteraction, PRODUCER, message)}
-      className={'Message__tile--producer'}
+      className={clsx('Message', 'Message__tile--producer', {
+        [`Message__tile--producer--selected`]: isSelected,
+      })}
       {...idAttributeGenerator('produced_message_tile')}
     >
       <div>
@@ -155,8 +174,8 @@ const renderErrorTile = (error) => {
 const renderValueWithLabel = (label, value) => {
   return (
     <div className={'Message__labelled-value'}>
-      <div className={'Message__label'}>
-        <Body>{label}</Body>
+      <div>
+        <Label className={'Message__label'}>{label}</Label>
       </div>
       <div className={'Message__value'}>{value}</div>
     </div>

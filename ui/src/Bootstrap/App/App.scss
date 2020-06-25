@@ -1,8 +1,10 @@
 .App {
 
   &__summary {
-    padding-top: $layout-06;
+    padding-top: $layout-05;
     min-height: $layout-07 * 2;
+    padding-left: $layout-03;
+    padding-right:$layout-03;
 
     &_icon {
       height: $spacing-08;
@@ -15,11 +17,17 @@
 
     &_heading {
       @include carbon--type-style("productive-heading-04");
-      margin-bottom: $spacing-05;
+      color: $text-02;
+    }
+
+    &_body-container {
+      padding-top: $spacing-03;
+      max-width: carbon--mini-units(64);
     }
 
     &_body {
-
+      @include carbon--type-style("body-short-01");
+      color: $text-01;
     }
 
   }
@@ -27,7 +35,7 @@
   &__column {
 
     &--producer {
-      top: 0;
+      top: 0px;
       position: sticky;
     }
 

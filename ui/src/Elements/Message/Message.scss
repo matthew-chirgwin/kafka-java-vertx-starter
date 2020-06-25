@@ -10,6 +10,20 @@
 
     &__tile--producer {
         padding: $spacing-05;
+        margin-left: $spacing-02;
+        margin-right: $spacing-02;
+    }
+
+    &__tile--consumer {
+        margin-top: $spacing-02;
+        margin-bottom: $spacing-02;
+    }
+
+    &__tile--producer,
+    &__tile--consumer {
+        &--selected {
+            background: $hover-ui;
+        }
     }
 
     &__tile--producer, &__tile--error {
@@ -25,6 +39,46 @@
         &--error {
             fill: $support-01;
         }
+    }
+
+    &--producer-first,
+    &--consumer-first {
+        margin-top: $spacing-07;
+        position: relative;
+    }
+
+    &--producer-first {
+        margin-right: carbon--mini-units(1.75);
+    }
+
+    &--consumer-first {
+        margin-bottom: carbon--mini-units(1.75);
+    }
+
+    &__first-container {
+        position: absolute;
+        top: carbon--mini-units(-2.4);
+        bottom: -$spacing-03;
+        right: -$spacing-03;
+        left: -$spacing-03;
+        border: $spacing-01 solid $ui-02;
+    }
+
+    &__tag-consumer-first,
+    &__tag-producer-first {
+        position: relative;
+        margin-left: $spacing-05;
+        top: -$spacing-05;
+    }
+
+    &__label {
+        color: $text-02;
+    }
+
+    &__value {
+        @include carbon--type-style("body-short-01");
+        color: $text-01;
+        max-width: carbon--mini-units(64);
     }
 
     &--producer-first &__icon--checkmark {
